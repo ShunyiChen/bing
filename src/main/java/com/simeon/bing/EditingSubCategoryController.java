@@ -29,18 +29,16 @@ public class EditingSubCategoryController {
     private Category category;
     private SubCategory subCategory;
 
-
-    /** 0-insert 1-update */
     @Setter
-    private int opt = 0;
+    private String mode = "insert";
 
-    public void init(Stage stage, TableView<SubCategory> subCategoryTableView, Category category) {
-        this.stage = stage;
+    public void init(TableView<SubCategory> subCategoryTableView, Stage stage, Category category) {
         this.subCategoryTableView = subCategoryTableView;
+        this.stage = stage;
         this.category = category;
     }
 
-    public void initEdit(Stage stage,TableView<SubCategory> subCategoryTableView, SubCategory subCategory) {
+    public void willEdit(Stage stage,TableView<SubCategory> subCategoryTableView, SubCategory subCategory) {
         this.stage = stage;
         this.subCategory = subCategory;
         this.subCategoryTableView = subCategoryTableView;
@@ -63,7 +61,7 @@ public class EditingSubCategoryController {
             alert.show();
         } else {
             // insert
-            if(opt == 0) {
+            if(mode.equals("insert")) {
                 if(addExistCheck(tfSubCategoryName.getText().trim())) {
                     Alert alert = new Alert (Alert.AlertType.WARNING);
                     alert.setTitle("提示");
@@ -118,7 +116,7 @@ public class EditingSubCategoryController {
             subCategory.setName(tfSubCategoryName.getText().trim());
             subCategory.setRFE(cbRFE.isSelected());
             subCategory.setCategoryId(category.getId());
-            subCategory.setCategoryName(category.getName());
+            subCategory.setShortcut(null);
 
             Long id = SubCategoryDAO.insertSubCategory(subCategory);
             subCategory.setId(id);

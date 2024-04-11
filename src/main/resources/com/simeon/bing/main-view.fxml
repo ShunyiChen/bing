@@ -7,7 +7,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="841.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.MainController">
     <bottom>
@@ -24,7 +23,7 @@
    <top>
       <HBox prefHeight="74.0" prefWidth="842.0" BorderPane.alignment="CENTER">
          <children>
-            <Label prefHeight="80.0" prefWidth="156.0" text="EY FilingSystem" />
+            <Label prefHeight="80.0" prefWidth="156.0" text="AC FilingSystem" />
          </children>
       </HBox>
    </top>
@@ -33,22 +32,10 @@
          <center>
             <FlowPane fx:id="buttonPane" hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onParamSettingsAction" prefHeight="130.0" prefWidth="130.0" text="系统参数">
-                     <font>
-                        <Font name="SimSun" size="18.0" />
-                     </font></Button>
-                  <Button mnemonicParsing="false" onAction="#onDataInterchangeAction" prefHeight="130.0" prefWidth="130.0" text="数据交互">
-                     <font>
-                        <Font name="SimSun" size="18.0" />
-                     </font></Button>
-                  <Button mnemonicParsing="false" onAction="#onCaseManagementAction" prefHeight="130.0" prefWidth="130.0" text="病例管理">
-                     <font>
-                        <Font name="SimSun" size="18.0" />
-                     </font></Button>
-                  <Button mnemonicParsing="false" onAction="#onDigitalProcessingAction" prefHeight="130.0" prefWidth="130.0" text="数字化加工">
-                     <font>
-                        <Font name="SimSun" size="18.0" />
-                     </font></Button>
+                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onParamSettingsAction" prefHeight="130.0" prefWidth="130.0" text="系统参数" />
+                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onDataInterchangeAction" prefHeight="130.0" prefWidth="130.0" text="数据交互" />
+                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onCaseManagementAction" prefHeight="130.0" prefWidth="130.0" text="病例管理" />
+                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onDigitalProcessingAction" prefHeight="130.0" prefWidth="130.0" text="数字化加工" />
                </children>
                <padding>
                   <Insets left="10.0" top="10.0" />
@@ -58,15 +45,11 @@
          <top>
             <HBox fx:id="returnPane" prefHeight="25.0" prefWidth="842.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onReturnAction" prefHeight="27.0" prefWidth="57.0" text="返回">
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" top="5.0" />
-                     </padding>
-                     <font>
-                        <Font name="SimSun" size="18.0" />
-                     </font>
-                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onReturnAction" text="返回" />
                </children>
+               <padding>
+                  <Insets left="6.0" />
+               </padding>
             </HBox>
          </top>
       </BorderPane>

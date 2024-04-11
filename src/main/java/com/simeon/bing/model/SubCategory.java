@@ -12,5 +12,5 @@ public class SubCategory {
     private String name;
     private Boolean RFE;
     private Long categoryId;
-    private String categoryName;
+    private String shortcut;
 }

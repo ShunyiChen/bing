@@ -23,7 +23,7 @@ public class MainApplication extends Application {
         System.setProperty("prism.subpixeltext", "false");
         this.stage = stage;
         loginLoader = new FXMLLoader(MainApplication.class.getResource("login-view.fxml"));
-        Scene scene = new Scene(loginLoader.load(), 600, 400);
+        Scene scene = new Scene(loginLoader.load());
         registerEnterKey(scene);
 //        File style = new File(MainApplication.class.getResource("style.css").getFile());
 //        scene.getStylesheets().add(style.toURI().toURL().toExternalForm());

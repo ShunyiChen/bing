@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 public class Category {
     private Long id;
     private String name;
+    private Long pid;
 
     @Override
     public String toString() {

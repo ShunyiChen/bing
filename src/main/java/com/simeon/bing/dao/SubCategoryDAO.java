@@ -12,9 +12,9 @@ import java.util.List;
 
 public class SubCategoryDAO {
 
-    public static List<SubCategory> findAllSubCategories(Long categoryId) throws SQLException, ClassNotFoundException {
+    public static List<SubCategory> findListByCategoryId(Long categoryId) throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement
-        String selectStmt = "SELECT ss.id, ss.name, ss.RFE, sc.name, ss.category_id FROM sys_subcategory ss LEFT JOIN sys_category sc ON ss.category_id = sc.id WHERE ss.category_id = "+categoryId;
+        String selectStmt = "SELECT id, name, RFE, category_id, shortcut FROM sys_subcategory WHERE category_id = "+categoryId;
         //Execute SELECT statement
         try {
             //Get ResultSet from dbExecuteQuery method
@@ -22,7 +22,7 @@ public class SubCategoryDAO {
             //Send ResultSet to the getUserFromResultSet method and get User object
             return getSubCategoriesFromResultSet(rs);
         } catch (SQLException e) {
-            System.out.println("While findAllSubCategories, an error occurred: " + e);
+            System.out.println("While findListByCategoryId, an error occurred: " + e);
             //Return exception
             throw e;
         }
@@ -35,8 +35,8 @@ public class SubCategoryDAO {
             sc.setId(rs.getLong(1));
             sc.setName(rs.getString(2));
             sc.setRFE(rs.getBoolean(3));
-            sc.setCategoryName(rs.getString(4));
-            sc.setCategoryId(rs.getLong(5));
+            sc.setCategoryId(rs.getLong(4));
+            sc.setShortcut(rs.getString(5));
             list.add(sc);
         }
         return list;
