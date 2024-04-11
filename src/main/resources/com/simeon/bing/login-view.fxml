@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.LoginController">
+   <center>
+      <VBox prefHeight="336.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="92.0" prefWidth="600.0">
+               <children>
+                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" contentDisplay="CENTER" text="EY FilingSystem">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                  </Label>
+                  <Label alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="88.0" text="version:1.0.0.0">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="38.0" prefWidth="592.0">
+               <children>
+                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="76.0" text="用户名:">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="userName" prefHeight="32.0" prefWidth="227.0" text="admin">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </TextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets left="-55.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="600.0">
+               <children>
+                  <Label fx:id="passLabel" alignment="CENTER_RIGHT" prefHeight="22.0" prefWidth="77.0" text="密 码:">
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <PasswordField fx:id="password" prefHeight="32.0" prefWidth="228.0" text="123" />
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+               <padding>
+                  <Insets left="-55.0" />
+               </padding>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="48.0" prefHeight="40.0" prefWidth="600.0">
+               <padding>
+                  <Insets top="45.0" />
+               </padding>
+               <children>
+                  <CheckBox fx:id="remember" mnemonicParsing="false" prefHeight="16.0" prefWidth="289.0" text="记住用户名" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="95.0" prefHeight="53.0" prefWidth="600.0">
+               <children>
+                  <Button fx:id="signIn" mnemonicParsing="false" onAction="#onSignInClick" prefHeight="35.0" prefWidth="275.0" text="登 录">
+                     <HBox.margin>
+                        <Insets right="15.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

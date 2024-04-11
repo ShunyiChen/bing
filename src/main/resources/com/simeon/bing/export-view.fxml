@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="241.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.ExportController">
+   <children>
+      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="50.0" prefHeight="35.0" prefWidth="413.0" spacing="10.0">
+         <children>
+            <Label text="包含文件:" />
+            <CheckBox disable="true" mnemonicParsing="false" text="PDF" />
+            <CheckBox disable="true" layoutX="208.0" layoutY="24.0" mnemonicParsing="false" text="地图图片" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="413.0" spacing="10.0">
+         <children>
+            <Label text="包含数据表:" />
+            <CheckBox fx:id="baseCheckBox" mnemonicParsing="false" selected="true" text="base表" />
+            <CheckBox fx:id="registryCheckBox" layoutX="280.0" layoutY="27.0" mnemonicParsing="false" selected="true" text="registry表" />
+            <CheckBox fx:id="settingsCheckBox" layoutX="315.0" layoutY="27.0" mnemonicParsing="false" selected="true" text="settings表" />
+            <CheckBox fx:id="userCheckBox" layoutX="350.0" layoutY="27.0" mnemonicParsing="false" selected="true" text="users表" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="600.0" spacing="10.0">
+         <children>
+            <Label text="导出文件路径:" />
+            <TextField fx:id="distPathField" editable="false" prefHeight="23.0" prefWidth="250.0" />
+            <Button mnemonicParsing="false" onAction="#onExportChooseClick" text="选择" />
+         </children>
+      </HBox>
+      <HBox fx:id="progressBarBox" alignment="CENTER" layoutX="10.0" layoutY="59.0" prefHeight="39.0" prefWidth="600.0" spacing="10.0">
+         <children>
+            <ProgressBar prefHeight="18.0" prefWidth="378.0" progress="0.0" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="10.0" layoutY="139.0" prefHeight="39.0" prefWidth="600.0" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#onCancelClick" text="取消" />
+            <Button fx:id="startExportButton" disable="true" mnemonicParsing="false" onAction="#onStartExportClick" text="开始导出" />
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets left="10.0" top="40.0" />
+   </padding>
+</VBox>

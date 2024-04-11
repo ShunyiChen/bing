@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="136.0" prefWidth="219.0" spacing="5.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="50.0" prefHeight="23.0" prefWidth="309.0">
+         <children>
+            <Label prefHeight="15.0" text="关于" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="23.0" prefWidth="600.0">
+         <children>
+            <Label prefHeight="39.0" prefWidth="156.0" text="版本:v1.3.0.1" textFill="WHITE" />
+         </children>
+         <padding>
+            <Insets top="35.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="23.0" prefWidth="600.0">
+         <children>
+            <Label prefHeight="39.0" prefWidth="156.0" text="构建日期:2023/9/23" textFill="WHITE" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
