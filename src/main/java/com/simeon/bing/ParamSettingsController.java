@@ -1,9 +1,11 @@
 package com.simeon.bing;
 
 import com.simeon.bing.dao.CategoryDAO;
+import com.simeon.bing.dao.SettingsDAO;
 import com.simeon.bing.dao.SubCategoryDAO;
 import com.simeon.bing.dao.UserDAO;
 import com.simeon.bing.model.Category;
+import com.simeon.bing.model.Settings;
 import com.simeon.bing.model.SubCategory;
 import com.simeon.bing.model.User;
 import com.simeon.bing.utils.AuthUtils;
@@ -28,11 +30,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -57,6 +62,20 @@ public class ParamSettingsController {
     protected TableColumn<User, String> colEnabled;
     private Stage editingUserStage = new Stage();
     private EditingUserController editingUserController;
+    /**********************************************/
+    /***               参数管理                   ***/
+    /**********************************************/
+    @FXML
+    private TextField tfServerHost;
+    @FXML
+    private TextField tfServerPort;
+    @FXML
+    private TextField tfServerUserName;
+    @FXML
+    private TextField tfServerPassword;
+    @FXML
+    private TextField tfFilePath;
+    private List<Settings> paramList;
 
     /**********************************************/
     /***               分类管理                   ***/
@@ -87,6 +106,8 @@ public class ParamSettingsController {
     private void initialize() {
         initEditingUserStage();
         initEditingUserTable();
+
+        initSettingParams();
 
         initEditingCategoryStage();
         initCategoryTreeView();
@@ -140,6 +161,9 @@ public class ParamSettingsController {
                             categoryTreeView.getSelectionModel().select(parent);
 
                         } catch (SQLException | ClassNotFoundException e) {
+                            Alert alert = new Alert(Alert.AlertType.ERROR, "", ButtonType.OK);
+                            alert.setHeaderText("数据库连接超时");
+                            alert.show();
                             throw new RuntimeException(e);
                         }
                     }
@@ -388,6 +412,27 @@ public class ParamSettingsController {
         });
     }
 
+    private void initSettingParams() {
+        try {
+            paramList =  SettingsDAO.findAllSettings();
+            paramList.forEach(e -> {
+                if(e.getName().equals("FTP_SERVER_HOST")) {
+                    tfServerHost.setText(e.getValue());
+                } else if(e.getName().equals("FTP_PORT")) {
+                    tfServerPort.setText(e.getValue());
+                } else if(e.getName().equals("FTP_LOGIN_USER")) {
+                    tfServerUserName.setText(e.getValue());
+                } else if(e.getName().equals("FTP_LOGIN_PASS")) {
+                    tfServerPassword.setText(e.getValue());
+                } else if(e.getName().equals("LOCAL_FILE_PATH")) {
+                    tfFilePath.setText(e.getValue());
+                }
+            });
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @FXML
     protected void onSubCategoryRefreshAction() {
         subCategoriesTableView.getItems().clear();
@@ -483,6 +528,93 @@ public class ParamSettingsController {
     protected void onSubCategoryKeyAction(KeyEvent event) {
         if(event.getCode() == KeyCode.ENTER) {
             onQuerySubCategoryAction();
+        }
+    }
+
+    @FXML
+    protected void onSaveServerParamsAction() {
+        if(StringUtils.isEmpty(tfServerHost.getText().trim())
+                || StringUtils.isEmpty(tfServerPort.getText().trim())
+                || StringUtils.isEmpty(tfServerUserName.getText().trim())
+                || StringUtils.isEmpty(tfServerPassword.getText().trim())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("信息不能为空");
+            alert.show();
+        }
+        else {
+            try {
+                List<Settings> params = new ArrayList<>();
+                params.add(Settings.builder().name("FTP_SERVER_HOST").value(tfServerHost.getText().trim()).build());
+                params.add(Settings.builder().name("FTP_PORT").value(tfServerPort.getText().trim()).build());
+                params.add(Settings.builder().name("FTP_LOGIN_USER").value(tfServerUserName.getText().trim()).build());
+                params.add(Settings.builder().name("FTP_LOGIN_PASS").value(tfServerPassword.getText().trim()).build());
+                SettingsDAO.updateBatch(params);
+
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("保存成功");
+                alert.show();
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @FXML
+    protected void onConnectionTestAction() {
+        if(StringUtils.isEmpty(tfServerHost.getText().trim())
+                || StringUtils.isEmpty(tfServerPort.getText().trim())
+                || StringUtils.isEmpty(tfServerUserName.getText().trim())
+                || StringUtils.isEmpty(tfServerPassword.getText().trim())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("信息不能为空");
+            alert.show();
+        } else {
+
+//            FileSystemManager fsManager = VFS.getManager();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("连接成功");
+            alert.show();
+        }
+    }
+
+    @FXML
+    protected void onSaveFilePathAction() {
+        if(StringUtils.isEmpty(tfFilePath.getText().trim())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("路径不能为空");
+            alert.show();
+        } else {
+            List<Settings> params = new ArrayList<>();
+            params.add(Settings.builder().name("LOCAL_FILE_PATH").value(tfFilePath.getText().trim()).build());
+            try {
+                SettingsDAO.updateBatch(params);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("保存成功");
+                alert.show();
+            } catch (SQLException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @FXML
+    protected void onCheckFilePathAction() {
+        if(StringUtils.isEmpty(tfFilePath.getText().trim())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+            alert.setHeaderText("路径不能为空");
+            alert.show();
+        } else {
+            if(Files.exists(Path.of(tfFilePath.getText().trim()))) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("路径正确");
+                alert.show();
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.OK);
+                alert.setHeaderText("路径不存在");
+                alert.show();
+            }
         }
     }
 }

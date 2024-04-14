@@ -1,6 +1,8 @@
 package com.simeon.bing.utils;
 
 
+import lombok.Getter;
+
 import javax.sql.rowset.CachedRowSet;
 import javax.sql.rowset.RowSetFactory;
 import javax.sql.rowset.RowSetProvider;
@@ -13,6 +15,7 @@ public class DBUtils {
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     //Connection
+    @Getter
     private static Connection conn = null;
 
     //Connection String
@@ -157,4 +160,5 @@ public class DBUtils {
         }
         return 0L;
     }
+
 }

@@ -8,9 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,15 +33,19 @@ public class LoginController {
 
     @FXML
     private void initialize() {
+        FontIcon titleIcon = new FontIcon("mdal-cloud_upload");
+        titleIcon.setIconSize(30);
+        titleIcon.setFill(Color.WHITE);
+        sysTitle.setGraphic(titleIcon);
 
-        FontIcon userIcon = new FontIcon("mdral-account_box");
+        FontIcon userIcon = new FontIcon("mdal-account_box");
         userIcon.setIconSize(16);
-        userIcon.setFill(Color.WHITE);
+        userIcon.setFill(Color.rgb(3,158,211));
         userNameLabel.setGraphic(userIcon);
 
         FontIcon passIcon = new FontIcon("mdmz-vpn_key");
         passIcon.setIconSize(16);
-        passIcon.setFill(Color.WHITE);
+        passIcon.setFill(Color.rgb(3,158,211));
         passLabel.setGraphic(passIcon);
 
         Platform.runLater(() -> {
@@ -88,9 +89,10 @@ public class LoginController {
                 data.put("password", remember.isSelected()?password.getText():"");
                 saveYamlConfFile(data);
 
-                app.stage.hide();
+
                 app.unregisterEnterKey(app.stage.getScene());
                 //进入主界面
+                app.initMainApp();
                 app.enter(loginUser);
 
             }

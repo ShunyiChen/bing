@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -15,31 +16,34 @@
    <center>
       <VBox prefHeight="336.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" prefHeight="92.0" prefWidth="600.0">
+            <HBox alignment="CENTER" prefHeight="92.0" prefWidth="600.0" style="-fx-background-color: rgb(3,158,211);;">
                <children>
-                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" contentDisplay="CENTER" text="AC FilingSystem">
+                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="病案数字化上传系统" textFill="WHITE">
                      <font>
-                        <Font size="30.0" />
+                        <Font name="SimSun" size="30.0" />
                      </font>
                   </Label>
-                  <Label alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="88.0" text="version:1.0.0.0">
+                  <Label alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="88.0" text="version:1.0.0.0" textFill="#efd0d0">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
                   </Label>
                </children>
+               <effect>
+                  <Reflection fraction="0.39" />
+               </effect>
             </HBox>
             <HBox alignment="CENTER">
                <children>
-                  <Label fx:id="userNameLabel" alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="76.0" text="用户名:">
+                  <Label fx:id="userNameLabel" prefHeight="24.0" prefWidth="70.0" text="用户名:">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
                      <font>
-                        <Font size="14.0" />
+                        <Font name="SimSun" size="14.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="userName" prefHeight="26.0" prefWidth="178.0" text="admin">
+                  <TextField fx:id="userName" prefHeight="28.0" prefWidth="200.0" text="admin">
                      <font>
                         <Font name="SimSun" size="15.0" />
                      </font>
@@ -54,15 +58,15 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="38.0" prefWidth="600.0">
                <children>
-                  <Label fx:id="passLabel" alignment="CENTER_RIGHT" prefHeight="24.0" prefWidth="76.0" text="密 码:">
+                  <Label fx:id="passLabel" prefHeight="24.0" prefWidth="70.0" text="密 码:">
                      <HBox.margin>
                         <Insets right="5.0" />
                      </HBox.margin>
                      <font>
-                        <Font size="14.0" />
+                        <Font name="SimSun" size="14.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="password" prefHeight="26.0" prefWidth="178.0" text="123" />
+                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" text="123" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -84,7 +88,7 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="95.0" prefHeight="53.0" prefWidth="600.0">
                <children>
-                  <Button fx:id="signIn" mnemonicParsing="false" onAction="#onSignInClick" prefHeight="24.0" prefWidth="234.0" text="登 录">
+                  <Button fx:id="signIn" mnemonicParsing="false" onAction="#onSignInClick" prefHeight="32.0" prefWidth="234.0" text="登 录">
                      <HBox.margin>
                         <Insets right="15.0" />
                      </HBox.margin>

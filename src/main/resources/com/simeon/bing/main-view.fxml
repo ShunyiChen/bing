@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="841.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.MainController">
     <bottom>
-        <BorderPane prefHeight="23.0" prefWidth="841.0" BorderPane.alignment="CENTER">
-         <left>
-            <HBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                      <Label fx:id="usrLabel" prefHeight="15.0" prefWidth="81.0" text="用户：" />
-                  <Hyperlink fx:id="currentUser" onAction="#onProfileClick" prefHeight="21.0" prefWidth="166.0" text="Hyperlink" underline="true" />
-               </children>
-            </HBox>
-         </left></BorderPane>
+        <BorderPane prefHeight="23.0" prefWidth="841.0" BorderPane.alignment="CENTER" />
     </bottom>
-   <top>
-      <HBox prefHeight="74.0" prefWidth="842.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label prefHeight="80.0" prefWidth="156.0" text="AC FilingSystem" />
-         </children>
-      </HBox>
-   </top>
    <center>
       <BorderPane fx:id="contentBorderPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
             <FlowPane fx:id="buttonPane" hgap="10.0" prefHeight="200.0" prefWidth="200.0" vgap="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onParamSettingsAction" prefHeight="130.0" prefWidth="130.0" text="系统参数" />
-                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onDataInterchangeAction" prefHeight="130.0" prefWidth="130.0" text="数据交互" />
-                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onCaseManagementAction" prefHeight="130.0" prefWidth="130.0" text="病例管理" />
-                  <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#onDigitalProcessingAction" prefHeight="130.0" prefWidth="130.0" text="数字化加工" />
+                  <Button fx:id="btnParamSettings" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onParamSettingsAction" prefHeight="130.0" prefWidth="130.0" text="系统参数">
+                     <font>
+                        <Font name="SimSun" size="12.0" />
+                     </font></Button>
+                  <Button fx:id="btnDataInteraction" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onDataInterchangeAction" prefHeight="130.0" prefWidth="130.0" text="数据交互">
+                     <font>
+                        <Font name="SimSun" size="12.0" />
+                     </font></Button>
+                  <Button fx:id="btnCaseMgt" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onCaseManagementAction" prefHeight="130.0" prefWidth="130.0" text="病例管理">
+                     <font>
+                        <Font name="SimSun" size="12.0" />
+                     </font></Button>
+                  <Button fx:id="btnDigital" alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#onDigitalProcessingAction" prefHeight="130.0" prefWidth="130.0" text="数字化加工">
+                     <font>
+                        <Font name="SimSun" size="12.0" />
+                     </font></Button>
                </children>
                <padding>
-                  <Insets left="10.0" top="10.0" />
+                  <Insets left="30.0" top="30.0" />
                </padding>
             </FlowPane>
          </center>
          <top>
             <HBox fx:id="returnPane" prefHeight="25.0" prefWidth="842.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onReturnAction" text="返回" />
+                  <Button fx:id="btnReture" alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#onReturnAction" text="返回">
+                     <font>
+                        <Font name="SimSun" size="12.0" />
+                     </font></Button>
                </children>
                <padding>
                   <Insets left="6.0" />
@@ -54,4 +56,51 @@
          </top>
       </BorderPane>
    </center>
+   <top>
+      <BorderPane prefHeight="70.0" prefWidth="200.0" style="-fx-background-color: linear-gradient(to right,rgb(3,158,211),rgb(221,221,221));" BorderPane.alignment="CENTER">
+         <left>
+            <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="662.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="systemTitleLabel" text="病案数字化上传系统" textFill="WHITE">
+                     <font>
+                        <Font name="SimSun" size="24.0" />
+                     </font>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+         </left>
+         <right>
+            <HBox fx:id="userProfilePane" alignment="CENTER" prefWidth="175.0" BorderPane.alignment="CENTER">
+               <children>
+                      <Label fx:id="loginUserLabel" alignment="CENTER_RIGHT" onMouseReleased="#onOpenProfileMenu" prefWidth="169.0" text="当前登录用户:" underline="true">
+                     <padding>
+                        <Insets right="10.0" />
+                     </padding>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font name="SimSun" size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </right>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+         <effect>
+            <Reflection bottomOpacity="0.02" fraction="0.19" topOpacity="0.38" />
+         </effect>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets bottom="10.0" />
+         </BorderPane.margin>
+      </BorderPane>
+   </top>
 </BorderPane>

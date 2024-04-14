@@ -79,7 +79,7 @@
                                        <font>
                                           <Font name="SimSun" size="13.0" />
                                        </font></Label>
-                                    <TextField prefHeight="24.0" prefWidth="266.0">
+                                    <TextField fx:id="tfServerHost" prefHeight="24.0" prefWidth="266.0">
                                        <font>
                                           <Font name="SimSun" size="13.0" />
                                        </font></TextField>
@@ -94,7 +94,7 @@
                               <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="814.0" spacing="5.0">
                                  <children>
                                     <Label prefHeight="26.0" prefWidth="105.0" text="FTP端口:" />
-                                    <TextField prefHeight="24.0" prefWidth="266.0">
+                                    <TextField fx:id="tfServerPort" prefHeight="24.0" prefWidth="266.0">
                                        <font>
                                           <Font name="SimSun" size="13.0" />
                                        </font></TextField>
@@ -106,7 +106,7 @@
                               <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="68.0" prefHeight="40.0" prefWidth="814.0" spacing="5.0">
                                  <children>
                                     <Label prefHeight="26.0" prefWidth="105.0" text="FTP登录用户名:" />
-                                    <TextField prefHeight="24.0" prefWidth="266.0">
+                                    <TextField fx:id="tfServerUserName" prefHeight="24.0" prefWidth="266.0">
                                        <font>
                                           <Font name="SimSun" size="13.0" />
                                        </font></TextField>
@@ -118,7 +118,7 @@
                               <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="127.0" prefHeight="40.0" prefWidth="814.0" spacing="5.0">
                                  <children>
                                     <Label prefHeight="26.0" prefWidth="105.0" text="FTP登录密码:" />
-                                    <PasswordField prefHeight="24.0" prefWidth="266.0">
+                                    <PasswordField fx:id="tfServerPassword" prefHeight="24.0" prefWidth="266.0">
                                        <font>
                                           <Font name="SimSun" size="13.0" />
                                        </font></PasswordField>
@@ -135,10 +135,15 @@
                <top>
                   <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                      <Button mnemonicParsing="false" text="保存">
+                      <Button mnemonicParsing="false" onAction="#onSaveServerParamsAction" text="保存">
                            <font>
                               <Font name="SimSun" size="13.0" />
                            </font></Button>
+                        <Button layoutX="10.0" layoutY="15.0" mnemonicParsing="false" onAction="#onConnectionTestAction" text="测试连接">
+                           <font>
+                              <Font name="SimSun" size="13.0" />
+                           </font>
+                        </Button>
                     </items>
                   </ToolBar>
                </top>
@@ -150,10 +155,15 @@
                <top>
                   <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                     <items>
-                      <Button mnemonicParsing="false" text="保存">
+                      <Button mnemonicParsing="false" onAction="#onSaveFilePathAction" text="保存">
                            <font>
                               <Font name="SimSun" size="13.0" />
                            </font></Button>
+                        <Button layoutX="10.0" layoutY="15.0" mnemonicParsing="false" onAction="#onCheckFilePathAction" text="检查路径">
+                           <font>
+                              <Font name="SimSun" size="13.0" />
+                           </font>
+                        </Button>
                     </items>
                   </ToolBar>
                </top>
@@ -166,7 +176,7 @@
                                  <font>
                                     <Font name="SimSun" size="13.0" />
                                  </font></Label>
-                              <TextField prefHeight="24.0" prefWidth="584.0">
+                              <TextField fx:id="tfFilePath" prefHeight="24.0" prefWidth="584.0">
                                  <font>
                                     <Font name="SimSun" size="13.0" />
                                  </font></TextField>
@@ -266,7 +276,7 @@
                </center>
             </BorderPane>
          </content></Tab>
-        <Tab text="快捷键设置">
+        <Tab text="扫描参数设置">
          <content>
             <BorderPane prefHeight="200.0" prefWidth="200.0">
                <top>
@@ -319,5 +329,63 @@
                </bottom>
             </BorderPane>
          </content></Tab>
+      <Tab text="快捷键设置">
+         <content>
+            <BorderPane prefHeight="200.0" prefWidth="200.0">
+               <top>
+                  <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <items>
+                        <Button mnemonicParsing="false" text="保存">
+                           <font>
+                              <Font name="SimSun" size="13.0" />
+                           </font>
+                        </Button>
+                     </items>
+                  </ToolBar>
+               </top>
+               <center>
+                  <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <columns>
+                        <TableColumn prefWidth="132.79998475313187" text="名称" />
+                        <TableColumn prefWidth="192.80003356933594" text="快捷键" />
+                        <TableColumn prefWidth="192.80003356933594" text="分类" />
+                     </columns>
+                  </TableView>
+               </center>
+               <bottom>
+                  <VBox prefHeight="151.0" prefWidth="814.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0">
+                           <content>
+                              <TextArea prefHeight="200.0" prefWidth="200.0">
+                                 <font>
+                                    <Font name="SimSun" size="13.0" />
+                                 </font>
+                              </TextArea>
+                           </content>
+                        </ScrollPane>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="814.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="46.0" text="过滤:">
+                                 <font>
+                                    <Font name="SimSun" size="13.0" />
+                                 </font>
+                              </Label>
+                              <TextField prefHeight="26.0" prefWidth="685.0">
+                                 <font>
+                                    <Font name="SimSun" size="13.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </bottom>
+            </BorderPane>
+         </content>
+      </Tab>
     </tabs>
 </TabPane>
