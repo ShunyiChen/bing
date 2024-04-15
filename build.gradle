@@ -54,11 +54,13 @@ dependencies {
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
 
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
-    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     implementation 'com.mysql:mysql-connector-j:8.3.0'
-    implementation 'org.yaml:snakeyaml:2.0'
-    // https://mvnrepository.com/artifact/org.apache.commons/commons-vfs2
-//    implementation 'org.apache.commons:commons-vfs2:2.9.0'
+    implementation 'org.yaml:snakeyaml:2.2'
+    implementation 'commons-net:commons-net:3.10.0'
+    implementation 'com.opencsv:opencsv:5.9'
+
+
+
 
 
     //lombok

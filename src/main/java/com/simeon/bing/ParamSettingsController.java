@@ -1,48 +1,42 @@
 package com.simeon.bing;
 
 import com.simeon.bing.dao.CategoryDAO;
-import com.simeon.bing.dao.SettingsDAO;
+import com.simeon.bing.dao.ParamsDAO;
 import com.simeon.bing.dao.SubCategoryDAO;
 import com.simeon.bing.dao.UserDAO;
 import com.simeon.bing.model.Category;
 import com.simeon.bing.model.Settings;
 import com.simeon.bing.model.SubCategory;
 import com.simeon.bing.model.User;
-import com.simeon.bing.utils.AuthUtils;
+import com.simeon.bing.utils.ParamUtils;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import javafx.util.StringConverter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.net.PrintCommandListener;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
+import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 参数设置controller
@@ -72,11 +66,12 @@ public class ParamSettingsController {
     @FXML
     private TextField tfServerUserName;
     @FXML
-    private TextField tfServerPassword;
+    private PasswordField tfServerPassword;
     @FXML
     private TextField tfFilePath;
     private List<Settings> paramList;
-
+    @FXML
+    private Label filePathInfo;
     /**********************************************/
     /***               分类管理                   ***/
     /**********************************************/
@@ -413,24 +408,19 @@ public class ParamSettingsController {
     }
 
     private void initSettingParams() {
-        try {
-            paramList =  SettingsDAO.findAllSettings();
-            paramList.forEach(e -> {
-                if(e.getName().equals("FTP_SERVER_HOST")) {
-                    tfServerHost.setText(e.getValue());
-                } else if(e.getName().equals("FTP_PORT")) {
-                    tfServerPort.setText(e.getValue());
-                } else if(e.getName().equals("FTP_LOGIN_USER")) {
-                    tfServerUserName.setText(e.getValue());
-                } else if(e.getName().equals("FTP_LOGIN_PASS")) {
-                    tfServerPassword.setText(e.getValue());
-                } else if(e.getName().equals("LOCAL_FILE_PATH")) {
-                    tfFilePath.setText(e.getValue());
-                }
-            });
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        FontIcon pathInfo = new FontIcon("mdal-info");
+        pathInfo.setIconSize(20);
+        pathInfo.setFill(Color.BLACK);
+        filePathInfo.setText("");
+        filePathInfo.setGraphic(pathInfo);
+        Tooltip tooltip = new Tooltip();
+        tooltip.setText("本地暂存空间");
+        filePathInfo.setTooltip(tooltip);
+        tfServerHost.setText(ParamUtils.getValue("FTP_SERVER_HOST"));
+        tfServerPort.setText(ParamUtils.getValue("FTP_PORT"));
+        tfServerUserName.setText(ParamUtils.getValue("FTP_LOGIN_USER"));
+        tfServerPassword.setText(ParamUtils.getValue("FTP_LOGIN_PASS"));
+        tfFilePath.setText(ParamUtils.getValue("LOCAL_FILE_PATH"));
     }
 
     @FXML
@@ -548,7 +538,7 @@ public class ParamSettingsController {
                 params.add(Settings.builder().name("FTP_PORT").value(tfServerPort.getText().trim()).build());
                 params.add(Settings.builder().name("FTP_LOGIN_USER").value(tfServerUserName.getText().trim()).build());
                 params.add(Settings.builder().name("FTP_LOGIN_PASS").value(tfServerPassword.getText().trim()).build());
-                SettingsDAO.updateBatch(params);
+                ParamsDAO.updateBatch(params);
 
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
                 alert.setHeaderText("保存成功");
@@ -564,17 +554,30 @@ public class ParamSettingsController {
         if(StringUtils.isEmpty(tfServerHost.getText().trim())
                 || StringUtils.isEmpty(tfServerPort.getText().trim())
                 || StringUtils.isEmpty(tfServerUserName.getText().trim())
-                || StringUtils.isEmpty(tfServerPassword.getText().trim())) {
+                || StringUtils.isEmpty(tfServerPassword.getText())) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
             alert.setHeaderText("信息不能为空");
             alert.show();
         } else {
-
-//            FileSystemManager fsManager = VFS.getManager();
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
-            alert.setHeaderText("连接成功");
-            alert.show();
+            FTPClient ftp = new FTPClient();
+            ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+            try {
+                ftp.connect(tfServerHost.getText().trim(), Integer.parseInt(tfServerPort.getText().trim()));
+                int reply = ftp.getReplyCode();
+                if (!FTPReply.isPositiveCompletion(reply)) {
+                    ftp.disconnect();
+                    throw new IOException("Exception in connecting to FTP Server");
+                }
+                ftp.login(tfServerUserName.getText().trim(), tfServerPassword.getText());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
+                alert.setHeaderText("连接成功");
+                alert.show();
+                ftp.disconnect();
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.WARNING, "", ButtonType.OK);
+                alert.setHeaderText("连接失败");
+                alert.show();
+            }
         }
     }
 
@@ -588,7 +591,7 @@ public class ParamSettingsController {
             List<Settings> params = new ArrayList<>();
             params.add(Settings.builder().name("LOCAL_FILE_PATH").value(tfFilePath.getText().trim()).build());
             try {
-                SettingsDAO.updateBatch(params);
+                ParamsDAO.updateBatch(params);
                 Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.OK);
                 alert.setHeaderText("保存成功");
                 alert.show();

@@ -1,7 +1,10 @@
 package com.simeon.bing;
 
+import com.simeon.bing.dao.ParamsDAO;
 import com.simeon.bing.dao.UserDAO;
+import com.simeon.bing.model.Settings;
 import com.simeon.bing.model.User;
+import com.simeon.bing.utils.ParamUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -30,9 +33,14 @@ public class LoginController {
     private Label passLabel;
     @FXML
     private Label sysTitle;
+    @FXML
+    private Label versionLabel;
 
     @FXML
     private void initialize() {
+        ParamUtils.init();
+        versionLabel.setText(ParamUtils.getValue("SYS_VERSION"));
+
         FontIcon titleIcon = new FontIcon("mdal-cloud_upload");
         titleIcon.setIconSize(30);
         titleIcon.setFill(Color.WHITE);

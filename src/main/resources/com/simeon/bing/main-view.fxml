@@ -12,7 +12,17 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="841.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.MainController">
     <bottom>
-        <BorderPane prefHeight="23.0" prefWidth="841.0" BorderPane.alignment="CENTER" />
+        <BorderPane prefHeight="23.0" prefWidth="841.0" style="-fx-background-color: rgb(221,221,221);" BorderPane.alignment="CENTER">
+         <left>
+            <Label fx:id="taskStateLabel" text="完成" BorderPane.alignment="CENTER">
+               <font>
+                  <Font name="SimSun" size="12.0" />
+               </font>
+               <BorderPane.margin>
+                  <Insets left="10.0" />
+               </BorderPane.margin>
+            </Label>
+         </left></BorderPane>
     </bottom>
    <center>
       <BorderPane fx:id="contentBorderPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">

@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="328.0" prefWidth="477.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="394.0" prefWidth="547.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.LoginController">
    <center>
       <VBox prefHeight="336.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
@@ -23,7 +23,7 @@
                         <Font name="SimSun" size="30.0" />
                      </font>
                   </Label>
-                  <Label alignment="BOTTOM_LEFT" prefHeight="30.0" prefWidth="88.0" text="version:1.0.0.0" textFill="#efd0d0">
+                  <Label fx:id="versionLabel" alignment="BOTTOM_LEFT" prefHeight="30.0" text="version:1.0.0.0" textFill="#efd0d0">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>

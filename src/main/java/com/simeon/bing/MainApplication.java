@@ -84,8 +84,8 @@ public class MainApplication extends Application {
     private void registerEnterKey(Scene scene) {
         LoginController controller = loginLoader.getController();
         scene.getAccelerators().put(
-                KCC,
-                controller::onSignInClick
+            KCC,
+            controller::onSignInClick
         );
     }
 
@@ -109,9 +109,9 @@ public class MainApplication extends Application {
             return new Task<>() {
                 @Override
                 protected FXMLLoader call() throws Exception {
-                    //DO YOU HARD STUFF HERE
-                    Thread.sleep(1000);
-                    return new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
+                //DO YOU HARD STUFF HERE
+                Thread.sleep(1000);
+                return new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
                 }
             };
         }

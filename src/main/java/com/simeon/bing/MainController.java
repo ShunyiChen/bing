@@ -1,17 +1,23 @@
 package com.simeon.bing;
 
+import com.simeon.bing.dao.ParamsDAO;
 import com.simeon.bing.model.User;
 import com.simeon.bing.utils.AuthUtils;
+import com.simeon.bing.utils.ParamUtils;
+import com.simeon.bing.utils.RefUtils;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -44,17 +50,23 @@ public class MainController {
     private HBox returnPane;
     @FXML
     private BorderPane contentBorderPane;
-    @FXML
     private TabPane paramSettingsPane;
+    private BorderPane diPane;
     @FXML
     private Label loginUserLabel;
     @FXML
     private Button btnReture;
-    private Color color = Color.rgb(3,158,211);
+    @FXML
+    private Label taskStateLabel;
     private ContextMenu menu = new ContextMenu();
+    private DIController controller;
 
+//    关于
+    private Stage aboutStage = new Stage();
 
     public void initialize(MainApplication mainApp, User loginUser) {
+        RefUtils.labelState = taskStateLabel;
+
         FontIcon icon = new FontIcon("mdral-account_circle");
         icon.setIconSize(40);
         icon.setFill(Color.WHITE);
@@ -70,13 +82,19 @@ public class MainController {
         initDataInterchangePane();
         initReturnPane();
         initUserProfileMenu();
+        initAboutStage();
     }
 
     private void initUserProfileMenu() {
-        MenuItem item = new MenuItem("退出系统");
-        item.setStyle("-fx-font-size: 13px;-fx-font-family:SimSun;");
-        menu.getItems().add(item);
-        item.setOnAction(e -> {
+        MenuItem itemAboutSys = new MenuItem("关于系统");
+        MenuItem itemExit = new MenuItem("退出系统");
+        itemAboutSys.setStyle("-fx-font-size: 13px;-fx-font-family:SimSun;");
+        itemExit.setStyle("-fx-font-size: 13px;-fx-font-family:SimSun;");
+        menu.getItems().addAll(itemAboutSys, new SeparatorMenuItem(),itemExit);
+        itemAboutSys.setOnAction(e -> {
+            aboutStage.show();
+        });
+        itemExit.setOnAction(e -> {
             Platform.exit();
         });
     }
@@ -95,22 +113,22 @@ public class MainController {
 
         FontIcon paramSettingsIcon = new FontIcon("mdmz-settings");
         paramSettingsIcon.setIconSize(80);
-        paramSettingsIcon.setFill(color);
+        paramSettingsIcon.setFill(Constants.primaryColor);
         btnParamSettings.setGraphic(paramSettingsIcon);
 
         FontIcon dataInteractionIcon = new FontIcon("mdsmz-psychology");
         dataInteractionIcon.setIconSize(80);
-        dataInteractionIcon.setFill(color);
+        dataInteractionIcon.setFill(Constants.primaryColor);
         btnDataInteraction.setGraphic(dataInteractionIcon);
 
         FontIcon caseMgtIcon = new FontIcon("mdal-airline_seat_recline_normal");
         caseMgtIcon.setIconSize(80);
-        caseMgtIcon.setFill(color);
+        caseMgtIcon.setFill(Constants.primaryColor);
         btnCaseMgt.setGraphic(caseMgtIcon);
 
         FontIcon digitalIcon = new FontIcon("mdomz-picture_as_pdf");
         digitalIcon.setIconSize(80);
-        digitalIcon.setFill(color);
+        digitalIcon.setFill(Constants.primaryColor);
         btnDigital.setGraphic(digitalIcon);
     }
 
@@ -126,7 +144,29 @@ public class MainController {
     }
 
     private void initDataInterchangePane() {
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("di-view.fxml"));
+        try {
+            diPane = loader.load();
+            controller = loader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private void initAboutStage() {
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("about-view.fxml"));
+        try {
+            VBox root = loader.load();
+            AboutController controller = loader.getController();
+            controller.setStage(aboutStage);
+            Scene scene = new Scene(root);
+            aboutStage.setResizable(false);
+            aboutStage.setScene(scene);
+            aboutStage.initModality(Modality.APPLICATION_MODAL);
+            aboutStage.setTitle("关于系统");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initReturnPane() {
@@ -139,12 +179,14 @@ public class MainController {
         contentBorderPane.getChildren().clear();
         contentBorderPane.setCenter(paramSettingsPane);
         contentBorderPane.setTop(returnPane);
-        returnPane.toFront();
-        btnReture.toFront();
     }
 
     @FXML
     protected void onDataInterchangeAction() {
+        contentBorderPane.getChildren().clear();
+        contentBorderPane.setCenter(diPane);
+        contentBorderPane.setTop(returnPane);
+        controller.resetTable();
     }
 
     @FXML
