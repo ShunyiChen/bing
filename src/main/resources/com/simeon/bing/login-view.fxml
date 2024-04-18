@@ -40,12 +40,12 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                      <font>
-                        <Font name="SimSun" size="14.0" />
+                        <Font name="SimSun" size="13.0" />
                      </font>
                   </Label>
                   <TextField fx:id="userName" prefHeight="28.0" prefWidth="200.0" text="admin">
                      <font>
-                        <Font name="SimSun" size="15.0" />
+                        <Font name="SimSun" size="13.0" />
                      </font>
                   </TextField>
                </children>
@@ -63,10 +63,13 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                      <font>
-                        <Font name="SimSun" size="14.0" />
+                        <Font name="SimSun" size="13.0" />
                      </font>
                   </Label>
-                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" text="123" />
+                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" text="123">
+                     <font>
+                        <Font name="SimSun" size="13.0" />
+                     </font></PasswordField>
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -80,7 +83,7 @@
                   <Insets top="45.0" />
                </padding>
                <children>
-                  <CheckBox fx:id="remember" mnemonicParsing="false" prefHeight="18.0" prefWidth="115.0" text="记住用户名">
+                  <CheckBox fx:id="remember" mnemonicParsing="false" prefHeight="18.0" prefWidth="250.0" text="记住用户名">
                      <font>
                         <Font name="SimSun" size="13.0" />
                      </font></CheckBox>

@@ -1,7 +1,7 @@
 package com.simeon.bing;
 
 import com.simeon.bing.dao.ParamsDAO;
-import com.simeon.bing.model.User;
+import com.simeon.bing.domain.User;
 import com.simeon.bing.utils.AuthUtils;
 import com.simeon.bing.utils.ParamUtils;
 import com.simeon.bing.utils.RefUtils;
@@ -51,7 +51,7 @@ public class MainController {
     @FXML
     private BorderPane contentBorderPane;
     private TabPane paramSettingsPane;
-    private BorderPane diPane;
+    private TabPane diPane;
     @FXML
     private Label loginUserLabel;
     @FXML
@@ -186,7 +186,7 @@ public class MainController {
         contentBorderPane.getChildren().clear();
         contentBorderPane.setCenter(diPane);
         contentBorderPane.setTop(returnPane);
-        controller.resetTable();
+        controller.resetImportTable();
     }
 
     @FXML

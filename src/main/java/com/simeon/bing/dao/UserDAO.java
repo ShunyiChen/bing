@@ -1,32 +1,64 @@
 package com.simeon.bing.dao;
 
-import com.simeon.bing.model.User;
+import com.simeon.bing.domain.User;
 import com.simeon.bing.utils.DBUtils;
+import com.simeon.bing.utils.JPAUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
+
     public static User findUser(String userName, String password) throws SQLException, ClassNotFoundException {
-        //Declare a SELECT statement
-        String selectStmt = "SELECT * FROM sys_user WHERE username='" + userName + "' and password='" + password + "'";
-        //Execute SELECT statement
-        try {
-            //Get ResultSet from dbExecuteQuery method
-            ResultSet rsEmp = DBUtils.dbExecuteQuery(selectStmt);
-            //Send ResultSet to the getUserFromResultSet method and get User object
-            User User = getUserFromResultSet(rsEmp);
-            //Return User object
-            return User;
-        } catch (SQLException e) {
-            System.out.println("While findUser with " + userName + " id, an error occurred: " + e);
-            //Return exception
-            throw e;
-        }
+        EntityManager entityManager = JPAUtils.getEntityManger();
+//        try {
+//            TypedQuery<User> query = entityManager.createQuery("select u from User u where u.userName = :userName and u.password = :password", User.class)
+//                    .setParameter("userName", userName).setParameter("password", password);
+//            return query.getSingleResult();
+//        } catch (NoResultException | NonUniqueResultException ex) {
+//            return null;
+//        }
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> criteria = cb.createQuery(User.class);
+        Root<User> u = criteria.from(User.class);
+        criteria.select(u).where(cb.and(
+            cb.equal(u.get("userName"), cb.parameter(String.class, "userName")),
+            cb.equal(u.get("password"), cb.parameter(String.class, "password"))
+        ));
+        TypedQuery<User> query = entityManager.createQuery(criteria)
+                .setParameter("userName", userName).setParameter("password", password);
+        return query.getSingleResult();
     }
+
+
+//    public static User findUser(String userName, String password) throws SQLException, ClassNotFoundException {
+//        //Declare a SELECT statement
+//        String selectStmt = "SELECT * FROM sys_user WHERE username='" + userName + "' and password='" + password + "'";
+//        //Execute SELECT statement
+//        try {
+//            //Get ResultSet from dbExecuteQuery method
+//            ResultSet rsEmp = DBUtils.dbExecuteQuery(selectStmt);
+//            //Send ResultSet to the getUserFromResultSet method and get User object
+//            User User = getUserFromResultSet(rsEmp);
+//            //Return User object
+//            return User;
+//        } catch (SQLException e) {
+//            System.out.println("While findUser with " + userName + " id, an error occurred: " + e);
+//            //Return exception
+//            throw e;
+//        }
+//    }
 
     public static List<User> findAllUsers() throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement

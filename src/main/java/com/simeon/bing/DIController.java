@@ -6,30 +6,24 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.simeon.bing.dao.RecordDAO;
 import com.simeon.bing.model.Record;
+import com.simeon.bing.model.RecordStatus;
 import com.simeon.bing.utils.UIUtils;
 import com.simeon.bing.utils.YmlUtils;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.util.Callback;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class DIController {
@@ -37,7 +31,7 @@ public class DIController {
     @Setter
     private Stage stage;
     @FXML
-    private TableView<Record> tableView;
+    private TableView<Record> importTable;
     @FXML
     protected TableColumn<Record, String> colOrgCode;
     @FXML
@@ -61,11 +55,60 @@ public class DIController {
     @FXML
     protected TableColumn<Record, String> colManner;
     private File csvFile;
-
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    @FXML
+    protected TableView<Record> exportTable;
+    @FXML
+    protected TableColumn<Record, String> colStatus;
+    @FXML
+    protected TableColumn<Record, String> colPage;
+    @FXML
+    protected TableColumn<Record, String> colHospitalNum;
+    @FXML
+    protected TableColumn<Record, String> colEName;
+    @FXML
+    protected TableColumn<Record, String> colEAdmitDate;
+    @FXML
+    protected TableColumn<Record, String> colDept;
+    @FXML
+    protected TableColumn<Record, String> colEDischargeDate;
+    @FXML
+    protected TableColumn<Record, String> colCreatior;
+    @FXML
+    protected TableColumn<Record, String> colCreationDate;
+    @FXML
+    protected ComboBox<RecordStatus> cbStatus;
+    @FXML
+    protected TextField tfPage;
+    @FXML
+    protected TextField tfHospitalNum;
+    @FXML
+    protected DatePicker dpCreationDateFrom;
+    @FXML
+    protected DatePicker dpCreationDateTo;
+    @FXML
+    protected DatePicker dpAdmitDateFrom;
+    @FXML
+    protected DatePicker dpAdmitDateTo;
+    @FXML
+    protected DatePicker dpDischargeDateFrom;
+    @FXML
+    protected DatePicker dpDischargeDateTo;
+    @FXML
+    protected TextField tfDept;
+    @FXML
+    protected TextField tfCreatior;
+    @FXML
+    protected TextField tfName;
 
     @FXML
     private void initialize() {
+        initImportTable();
+        initExportTable();
+        initComboBox();
+    }
+
+    private void initImportTable() {
         colOrgCode.setCellValueFactory(param -> {
             if(param.getValue().getOrgCode() == null) {
                 return new SimpleObjectProperty<>("");
@@ -145,8 +188,83 @@ public class DIController {
         });
     }
 
-    public void resetTable() {
-        tableView.getItems().clear();
+    private void initExportTable() {
+        colStatus.setCellValueFactory(param -> {
+            if(param.getValue().getCreationStatus() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getCreationStatus()==1?"未拍摄":"已拍摄");
+            }
+        });
+        colPage.setCellValueFactory(param -> {
+            if(param.getValue().getCreationPage() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getCreationPage()+"");
+            }
+        });
+        colHospitalNum.setCellValueFactory(param -> {
+            if(param.getValue().getHospitalNum() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getHospitalNum());
+            }
+        });
+        colEName.setCellValueFactory(param -> {
+            if(param.getValue().getName() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getName());
+            }
+        });
+        colEAdmitDate.setCellValueFactory(param -> {
+            if(param.getValue().getAdmitDate() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(dateFormat.format(param.getValue().getAdmitDate()));
+            }
+        });
+        colDept.setCellValueFactory(param -> {
+            if(param.getValue().getDept() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getDept());
+            }
+        });
+        colEDischargeDate.setCellValueFactory(param -> {
+            if(param.getValue().getDischargeDate() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(dateFormat.format(param.getValue().getDischargeDate()));
+            }
+        });
+        colCreatior.setCellValueFactory(param -> {
+            if(param.getValue().getCreatior() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(param.getValue().getCreatior());
+            }
+        });
+        colCreationDate.setCellValueFactory(param -> {
+            if(param.getValue().getCreationDate() == null) {
+                return new SimpleObjectProperty<>("");
+            } else {
+                return new SimpleObjectProperty<>(dateFormat.format(param.getValue().getCreationDate()));
+            }
+        });
+    }
+
+    private void initComboBox() {
+        cbStatus.getItems().clear();
+        RecordStatus status0 = new RecordStatus("", -1);
+        RecordStatus status1 = new RecordStatus("未拍摄", 0);
+        RecordStatus status2 = new RecordStatus("已拍摄", 1);
+        cbStatus.getItems().addAll(status0, status1, status2);
+        cbStatus.setValue(status0);
+    }
+
+    public void resetImportTable() {
+        importTable.getItems().clear();
     }
 
     @FXML
@@ -168,7 +286,7 @@ public class DIController {
             loadCSVFile(csvFile);
         }
     }
-
+    
     private void loadCSVFile(File csvFile) {
         try {
             // Create an object of file reader class with CSV file as a parameter.
@@ -183,7 +301,7 @@ public class DIController {
                     .build();
             // Read all data at once
             List<String[]> allData = csvReader.readAll();
-            tableView.getItems().clear();
+            importTable.getItems().clear();
             // Print Data.
             for (String[] row : allData) {
                 Record record = new Record();
@@ -198,9 +316,9 @@ public class DIController {
                 record.setBirthdate(dateFormat.parse(row[8]));
                 record.setAge(Integer.parseInt(row[9]));
                 record.setManner(Integer.parseInt(row[10]));
-                tableView.getItems().add(record);
+                importTable.getItems().add(record);
             }
-            tableView.refresh();
+            importTable.refresh();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -209,7 +327,7 @@ public class DIController {
 
     @FXML
     protected void onImportAction() {
-        if(tableView.getItems().isEmpty()) {
+        if(importTable.getItems().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "", ButtonType.CLOSE);
             alert.setHeaderText("无法导入空数据");
             alert.show();
@@ -222,7 +340,7 @@ public class DIController {
                 throw new RuntimeException(e);
             }
             try {
-                RecordDAO.insertRecord(tableView.getItems());
+                RecordDAO.insertRecord(importTable.getItems());
             } catch (SQLException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -232,4 +350,21 @@ public class DIController {
         uiUtils.loading();
     }
 
+    @FXML
+    protected void onExportAction() {
+
+    }
+
+    @FXML
+    protected void onSearchAction() {
+//        if(cbStatus.getSelectionModel().getSelectedItem().getCode() != -1) {
+//            query.setCreationStatus(cbStatus.getSelectionModel().getSelectedItem().getCode());
+//        }
+
+    }
+
+    @FXML
+    protected void onResetAction() {
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.simeon.bing;
 
-import com.simeon.bing.model.User;
+import com.simeon.bing.domain.User;
+import com.simeon.bing.utils.JPAUtils;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -11,6 +12,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
@@ -20,8 +23,12 @@ public class MainApplication extends Application {
     private FXMLLoader loginLoader;
     private final ProgressIndicator progressIndicator = new ProgressIndicator();
 
+    private static final Logger logger = LogManager.getLogger("bing");
+
+
     @Override
     public void start(Stage stage) throws IOException {
+        logger.info("Application Starting");
         System.setProperty("prism.subpixeltext", "false");
         this.stage = stage;
         loginLoader = new FXMLLoader(MainApplication.class.getResource("login-view.fxml"));
@@ -33,6 +40,12 @@ public class MainApplication extends Application {
         stage.setTitle(Constants.SYS_NAME);
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void stop() {
+        JPAUtils.closeEntityManagerFactory();
+        logger.debug("Application stopped");
     }
 
     public void initMainApp() {

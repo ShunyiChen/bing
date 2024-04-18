@@ -1,9 +1,7 @@
 package com.simeon.bing;
 
-import com.simeon.bing.dao.ParamsDAO;
 import com.simeon.bing.dao.UserDAO;
-import com.simeon.bing.model.Settings;
-import com.simeon.bing.model.User;
+import com.simeon.bing.domain.User;
 import com.simeon.bing.utils.ParamUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -48,12 +46,12 @@ public class LoginController {
 
         FontIcon userIcon = new FontIcon("mdal-account_box");
         userIcon.setIconSize(16);
-        userIcon.setFill(Color.rgb(3,158,211));
+        userIcon.setFill(Constants.primaryColor);
         userNameLabel.setGraphic(userIcon);
 
         FontIcon passIcon = new FontIcon("mdmz-vpn_key");
         passIcon.setIconSize(16);
-        passIcon.setFill(Color.rgb(3,158,211));
+        passIcon.setFill(Constants.primaryColor);
         passLabel.setGraphic(passIcon);
 
         Platform.runLater(() -> {

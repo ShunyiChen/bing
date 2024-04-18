@@ -30,4 +30,16 @@ public class Record {
     private Integer age;
     /** 高院方式 */
     private Integer manner;
+    /** 制作状态 */
+    private Integer creationStatus;
+    /** 制作页数 */
+    private Integer creationPage;
+    /** 住院号 */
+    private String hospitalNum;
+    /** 制作日期 */
+    private Date creationDate;
+    /** 入院科室 */
+    private String dept;
+    /** 制作用户 */
+    private String creatior;
 }

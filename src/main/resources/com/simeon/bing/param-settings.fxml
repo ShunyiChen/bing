@@ -214,7 +214,7 @@
                                       <columns>
                                         <TableColumn fx:id="colSubCategoryName" prefWidth="212.79998165369034" text="分类名称" />
                                         <TableColumn fx:id="colSubCategoryRFE" prefWidth="117.0" text="是否补充材料" />
-                                          <TableColumn fx:id="colSubCategoryShortcut" prefWidth="177.0" text="快捷键" />
+                                          <TableColumn fx:id="colSubCategoryShortcut" prefWidth="65.0" text="快捷键" />
                                       </columns>
                                     </TableView>
                                  </content>

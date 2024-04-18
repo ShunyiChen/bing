@@ -1,7 +1,6 @@
 package com.simeon.bing.dao;
 
 import com.simeon.bing.model.SubCategory;
-import com.simeon.bing.model.User;
 import com.simeon.bing.utils.DBUtils;
 import org.apache.commons.lang3.StringUtils;
 

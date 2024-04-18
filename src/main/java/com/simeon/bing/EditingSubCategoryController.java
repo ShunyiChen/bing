@@ -4,7 +4,6 @@ import com.simeon.bing.dao.SubCategoryDAO;
 import com.simeon.bing.dao.UserDAO;
 import com.simeon.bing.model.Category;
 import com.simeon.bing.model.SubCategory;
-import com.simeon.bing.model.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;

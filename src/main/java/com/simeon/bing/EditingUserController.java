@@ -1,7 +1,7 @@
 package com.simeon.bing;
 
 import com.simeon.bing.dao.UserDAO;
-import com.simeon.bing.model.User;
+import com.simeon.bing.domain.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
