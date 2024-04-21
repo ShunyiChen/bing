@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class YmlUtils {
-    private static String PATH = "preference/profile.yaml";
+    private static String PATH = "conf/profile.yaml";
     public static void set(String key, String value) {
         Map<String, Object> data = new LinkedHashMap<>();
         data.put(key, value);

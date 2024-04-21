@@ -16,8 +16,41 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.math.BigInteger;
+//import com.teamdev.jxbrowser.chromium.be;
 
 public class MainApplication extends Application {
+
+//    static {
+//        try {
+//            Field e = be.class.getDeclaredField("e");
+//            e.setAccessible(true);
+//            Field f = be.class.getDeclaredField("f");
+//            f.setAccessible(true);
+//
+//            Method getDeclaredFields0 = Class.class.getDeclaredMethod("getDeclaredFields0", boolean.class);
+//            getDeclaredFields0.setAccessible(true);
+//            Field[] fields = (Field[]) getDeclaredFields0.invoke(Field.class, false);
+//            Field modifiers = null;
+//            for (Field each : fields) {
+//                if ("modifiers".equals(each.getName())) {
+//                    modifiers = each;
+//                }
+//            }
+//            modifiers.setAccessible(true);
+//            modifiers.setInt(e, e.getModifiers() & ~Modifier.FINAL);
+//            modifiers.setInt(f, f.getModifiers() & ~Modifier.FINAL);
+//            e.set(null, new BigInteger("1"));
+//            f.set(null, new BigInteger("1"));
+//            modifiers.setAccessible(false);
+//        } catch (Exception e1) {
+//            e1.printStackTrace();
+//        }
+//    }
+
     static KeyCodeCombination KCC = new KeyCodeCombination(KeyCode.ENTER);
     public Stage stage;
     private FXMLLoader loginLoader;
@@ -28,6 +61,11 @@ public class MainApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+//        30天
+        //        System.setProperty("jxbrowser.license.key", "OK6AEKNYF1GLZBS9DGMMCVAEVGUAQGQJBDSPYCNGOVXIVLGTUGJM6BYDTYSYE8HZTKJP21L4H23SH2SKFUGTG3KDCDWV614TCPN5QK98WN9Z6NUE9F9KXF0HKG440Y1LRPNNI4NW15CM1FLXT");
+//        帆软
+        System.setProperty("jxbrowser.license.key","1BNDIEOFAZ1Z8R8VNNG4W07HLC9173JJW3RT0P2G9Y28L9YFFIWDBRFNFLFDQBKXAHO9ZE");
+
         logger.info("Application Starting");
         System.setProperty("prism.subpixeltext", "false");
         this.stage = stage;
@@ -36,6 +74,7 @@ public class MainApplication extends Application {
         registerEnterKey(scene);
         LoginController loginController = loginLoader.getController();
         loginController.initialize(this);
+        stage.setOnCloseRequest(e -> System.exit(0));
         // enable style
         stage.setTitle(Constants.SYS_NAME);
         stage.setScene(scene);
@@ -44,7 +83,8 @@ public class MainApplication extends Application {
 
     @Override
     public void stop() {
-        JPAUtils.closeEntityManagerFactory();
+        System.exit(0);
+//        JPAUtils.closeEntityManagerFactory();
         logger.debug("Application stopped");
     }
 

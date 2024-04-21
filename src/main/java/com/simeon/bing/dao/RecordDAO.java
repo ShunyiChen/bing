@@ -1,8 +1,6 @@
 package com.simeon.bing.dao;
 
-import com.simeon.bing.model.Category;
-import com.simeon.bing.model.Record;
-import com.simeon.bing.model.Settings;
+import com.simeon.bing.domain.Record;
 import com.simeon.bing.utils.DBUtils;
 
 import java.sql.PreparedStatement;

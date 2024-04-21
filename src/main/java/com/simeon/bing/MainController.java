@@ -3,6 +3,7 @@ package com.simeon.bing;
 import com.simeon.bing.dao.ParamsDAO;
 import com.simeon.bing.domain.User;
 import com.simeon.bing.utils.AuthUtils;
+import com.simeon.bing.utils.JPAUtils;
 import com.simeon.bing.utils.ParamUtils;
 import com.simeon.bing.utils.RefUtils;
 import javafx.application.Platform;
@@ -52,6 +53,7 @@ public class MainController {
     private BorderPane contentBorderPane;
     private TabPane paramSettingsPane;
     private TabPane diPane;
+    private BorderPane dpPane;
     @FXML
     private Label loginUserLabel;
     @FXML
@@ -59,7 +61,8 @@ public class MainController {
     @FXML
     private Label taskStateLabel;
     private ContextMenu menu = new ContextMenu();
-    private DIController controller;
+    private DIController diController;
+    private DPController dpController;
 
 //    关于
     private Stage aboutStage = new Stage();
@@ -80,6 +83,7 @@ public class MainController {
         initButtons();
         initParamSettingsPane();
         initDataInterchangePane();
+        initDigitalProcessingPane();
         initReturnPane();
         initUserProfileMenu();
         initAboutStage();
@@ -94,9 +98,7 @@ public class MainController {
         itemAboutSys.setOnAction(e -> {
             aboutStage.show();
         });
-        itemExit.setOnAction(e -> {
-            Platform.exit();
-        });
+        itemExit.setOnAction(e -> System.exit(0));
     }
 
     private void initSystemTitle() {
@@ -147,7 +149,17 @@ public class MainController {
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("di-view.fxml"));
         try {
             diPane = loader.load();
-            controller = loader.getController();
+            diController = loader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void initDigitalProcessingPane() {
+        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("dp-view.fxml"));
+        try {
+            dpPane = loader.load();
+            dpController = loader.getController();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -186,7 +198,7 @@ public class MainController {
         contentBorderPane.getChildren().clear();
         contentBorderPane.setCenter(diPane);
         contentBorderPane.setTop(returnPane);
-        controller.resetImportTable();
+        diController.resetImportTable();
     }
 
     @FXML
@@ -196,7 +208,10 @@ public class MainController {
 
     @FXML
     protected void onDigitalProcessingAction() {
-
+        contentBorderPane.getChildren().clear();
+        contentBorderPane.setCenter(dpPane);
+        contentBorderPane.setTop(returnPane);
+//        dpController.resetImportTable();
     }
 
     @FXML

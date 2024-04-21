@@ -5,7 +5,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.simeon.bing.dao.RecordDAO;
-import com.simeon.bing.model.Record;
+import com.simeon.bing.domain.Record;
 import com.simeon.bing.model.RecordStatus;
 import com.simeon.bing.utils.UIUtils;
 import com.simeon.bing.utils.YmlUtils;

@@ -1,10 +1,18 @@
-package com.simeon.bing.model;
+package com.simeon.bing.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
+@Entity
+@Table(name="sys_user")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Record {
     /** ID */
     private Long id;

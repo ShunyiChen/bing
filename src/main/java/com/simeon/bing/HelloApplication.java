@@ -1,6 +1,5 @@
 //package com.simeon.bing;
 //
-//import com.simeon.bing.model.Reg;
 //import org.apache.commons.lang3.StringUtils;
 //import org.apache.poi.hssf.usermodel.HSSFCell;
 //import org.apache.poi.hssf.usermodel.HSSFWorkbook;
