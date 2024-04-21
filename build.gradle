@@ -3,15 +3,25 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.8'
     id 'org.beryx.jlink' version '2.12.0'
     id 'java'
+    // Provides convenience methods for adding JxBrowser dependencies into a project
+    id("com.teamdev.jxbrowser") version "1.0.2"
 }
 // 设置 JDK 版本
 project.sourceCompatibility=1.17
 project.targetCompatibility=1.17
 
+jxbrowser {
+//    version = "7.38.1"
+    version = "7.22"
+}
+
 repositories {
     mavenCentral()
     maven {
         url "https://repo.e-iceblue.cn/repository/maven-public/"
+    }
+    maven {
+        url "https://europe-maven.pkg.dev/jxbrowser/releases"
     }
 }
 
@@ -71,10 +81,31 @@ dependencies {
     implementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
     implementation "org.hibernate:hibernate-core:$hibernateEntityManagerVersion"
 
+//    implementation 'com.teamdev.jxbrowser:jxbrowser-cross-platform:7.12.2'
+//    implementation 'com.teamdev.jxbrowser:jxbrowser-win32:7.12.2'
+//    implementation 'com.teamdev.jxbrowser:jxbrowser-javafx:7.12.2'
+
+    implementation(jxbrowser.crossPlatform)
+    implementation(jxbrowser.javafx)
+
+//    jxbrowser 6.24.3
+//    implementation files("lib/jxbrowser-6.24.3.jar")
+//    implementation files("lib/jxbrowser-win32-6.24.3.jar")
+
+
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+}
+
+run {
+    //破解jxbrowser 6.24.3
+    jvmArgs('--add-opens', 'java.base/java.lang=ALL-UNNAMED')
+    jvmArgs('--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED')
+    jvmArgs('--add-opens', 'javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED')
+    jvmArgs('--add-opens', 'javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED')
+    jvmArgs('--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED')
 }
 
 jar {
