@@ -48,7 +48,7 @@ public class ProgressController {
         alert.setHeaderText(" ".repeat(30)+"执行完毕");
         FontIcon icon = new FontIcon("mdal-done_outline");
         icon.setIconSize(40);
-        icon.setFill(Constants.primaryColor);
+//        icon.setFill(Constants.primaryColor);
         alert.setGraphic(icon);
         alert.show();
     }

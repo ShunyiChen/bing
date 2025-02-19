@@ -18,7 +18,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="92.0" prefWidth="600.0">
                <children>
-                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="病案数字化上传系统">
+                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="病案数字化上传系统（高拍）">
                      <font>
                         <Font size="25.0" />
                      </font>

@@ -62,7 +62,7 @@ dependencies {
 //    implementation 'org.apache.pdfbox:fontbox:2.0.27'// https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
 //    spire pdf
 //    implementation 'e-iceblue:spire.pdf.free:5.1.0'
-    implementation 'org.apache.commons:commons-lang3:3.13.0'
+//    implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
 
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
@@ -106,10 +106,8 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     // https://mvnrepository.com/artifact/cn.hutool/hutool-all
     implementation group: 'cn.hutool', name: 'hutool-all', version: '5.8.21'
-    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
     implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.80'
-
-
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
 }
 
 run {

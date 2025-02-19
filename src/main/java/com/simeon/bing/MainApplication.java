@@ -1,7 +1,5 @@
 package com.simeon.bing;
 
-import com.simeon.bing.domain.User;
-import com.simeon.bing.utils.JPAUtils;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -16,10 +14,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.math.BigInteger;
 //6.24.3
 //import com.teamdev.jxbrowser.chromium.be;
 
@@ -71,6 +65,8 @@ public class MainApplication extends Application {
         logger.info("Application Starting");
         System.setProperty("prism.subpixeltext", "false");
         this.stage = stage;
+        this.stage.setResizable(false);
+        this.stage.setMaximized(false);
         loginLoader = new FXMLLoader(MainApplication.class.getResource("login-view.fxml"));
         Scene scene = new Scene(loginLoader.load());
         registerEnterKey(scene);
@@ -78,7 +74,7 @@ public class MainApplication extends Application {
         loginController.initialize(this);
         stage.setOnCloseRequest(e -> System.exit(0));
         // enable style
-        stage.setTitle(Constants.SYS_NAME);
+//        stage.setTitle(Constants.SYS_NAME);
         stage.setScene(scene);
         stage.show();
     }
@@ -105,9 +101,8 @@ public class MainApplication extends Application {
     /**
      * 进入主界面
      *
-     * @param loginUser 登录用户
      */
-    public void enter(User loginUser) {
+    public void enter() {
         final ServiceExample serviceExample = new ServiceExample();
 
         //Here you tell your progress indicator is visible only when the service is runing
@@ -119,7 +114,7 @@ public class MainApplication extends Application {
                 root = loader.load();
                 stage.getScene().setRoot(root);
                 MainController mainController = loader.getController();
-                mainController.initialize(MainApplication.this, loginUser);
+                mainController.initialize(MainApplication.this);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -1,12 +1,10 @@
 package com.simeon.bing;
 
 import com.simeon.bing.request.Login;
-import com.simeon.bing.domain.User;
 import com.simeon.bing.response.LoginResponse;
 import com.simeon.bing.utils.AESUtils;
 import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
-import com.simeon.bing.utils.ParamUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,8 +13,6 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.util.Map;
 
 public class LoginController {
-    private User loginUser;
-
     private MainApplication app;
     @FXML
     private CheckBox remember;
@@ -37,8 +33,7 @@ public class LoginController {
 
     @FXML
     private void initialize() {
-        ParamUtils.init();
-        versionLabel.setText(ParamUtils.getValue("SYS_VERSION"));
+        versionLabel.setText("1.0.0");
 
 //        FontIcon titleIcon = new FontIcon("mdal-cloud_upload");
 //        titleIcon.setIconSize(30);
@@ -47,12 +42,12 @@ public class LoginController {
 
         FontIcon userIcon = new FontIcon("mdal-account_box");
         userIcon.setIconSize(16);
-        userIcon.setFill(Constants.primaryColor);
+//        userIcon.setFill(Constants.primaryColor);
         userNameLabel.setGraphic(userIcon);
 
         FontIcon passIcon = new FontIcon("mdmz-vpn_key");
         passIcon.setIconSize(16);
-        passIcon.setFill(Constants.primaryColor);
+//        passIcon.setFill(Constants.primaryColor);
         passLabel.setGraphic(passIcon);
 
         Platform.runLater(() -> {
@@ -76,12 +71,19 @@ public class LoginController {
                 String jsonInputString = JsonUtil.toJson(data); // 将对象转换为JSON字符串
                 String response = HttpUtil.sendPostRequest(APIs.LOGIN, jsonInputString);
                 LoginResponse res = JsonUtil.fromJson(response, LoginResponse.class);
-
-                System.out.println("POST Response: " + res.getData().getAccess_token());
-
+                if(res.getData() == null) {
+                    Alert alert = new Alert (Alert.AlertType.INFORMATION);
+                    alert.setTitle("提示");
+                    alert.setHeaderText("用户名或密码输入不正确");
+                    alert.setContentText("");
+                    alert.show();
+                    return;
+                }
+                TokenStore.saveToken(res.getData().getAccess_token());
                 app.unregisterEnterKey(app.stage.getScene());
                 //进入主界面
                 app.initMainApp();
+                app.enter();
             } catch (Exception e) {
                 e.printStackTrace();
             }
