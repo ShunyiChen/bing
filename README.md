@@ -1,2 +1,2 @@
 # bing
-bing JPA
+bing

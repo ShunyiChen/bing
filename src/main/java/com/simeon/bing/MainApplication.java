@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.math.BigInteger;
+//6.24.3
 //import com.teamdev.jxbrowser.chromium.be;
 
 public class MainApplication extends Application {
@@ -62,8 +63,9 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 //        30天
-        //        System.setProperty("jxbrowser.license.key", "OK6AEKNYF1GLZBS9DGMMCVAEVGUAQGQJBDSPYCNGOVXIVLGTUGJM6BYDTYSYE8HZTKJP21L4H23SH2SKFUGTG3KDCDWV614TCPN5QK98WN9Z6NUE9F9KXF0HKG440Y1LRPNNI4NW15CM1FLXT");
+//                System.setProperty("jxbrowser.license.key", "OK6AEKNYF1GLZBS9DGMMCVAEVGUAQGQJBDSPYCNGOVXIVLGTUGJM6BYDTYSYE8HZTKJP21L4H23SH2SKFUGTG3KDCDWV614TCPN5QK98WN9Z6NUE9F9KXF0HKG440Y1LRPNNI4NW15CM1FLXT");
 //        帆软
+//        7.22
         System.setProperty("jxbrowser.license.key","1BNDIEOFAZ1Z8R8VNNG4W07HLC9173JJW3RT0P2G9Y28L9YFFIWDBRFNFLFDQBKXAHO9ZE");
 
         logger.info("Application Starting");

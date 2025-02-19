@@ -14,7 +14,7 @@ public class RecordDAO {
 
     public static void insertRecord(List<Record> list) throws SQLException, ClassNotFoundException {
         //Execute UPDATE operation
-        String insertSQL = "INSERT INTO sys_record(org_code, org_name, record_number, times, admit_date, discharge_date, name, gender, birth_date, age, manner) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+        String insertSQL = "INSERT INTO bing_record(org_code, org_name, record_number, times, admit_date, discharge_date, name, gender, birth_date, age, manner) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         dbConnect();
         PreparedStatement statement = DBUtils.getConn().prepareStatement(insertSQL);
         for (Record record : list) {

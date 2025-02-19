@@ -1,16 +1,17 @@
 package com.simeon.bing;
 
-import com.simeon.bing.dao.UserDAO;
+import com.simeon.bing.request.Login;
 import com.simeon.bing.domain.User;
+import com.simeon.bing.response.LoginResponse;
+import com.simeon.bing.utils.AESUtils;
+import com.simeon.bing.utils.HttpUtil;
+import com.simeon.bing.utils.JsonUtil;
 import com.simeon.bing.utils.ParamUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class LoginController {
@@ -39,10 +40,10 @@ public class LoginController {
         ParamUtils.init();
         versionLabel.setText(ParamUtils.getValue("SYS_VERSION"));
 
-        FontIcon titleIcon = new FontIcon("mdal-cloud_upload");
-        titleIcon.setIconSize(30);
-        titleIcon.setFill(Color.WHITE);
-        sysTitle.setGraphic(titleIcon);
+//        FontIcon titleIcon = new FontIcon("mdal-cloud_upload");
+//        titleIcon.setIconSize(30);
+//        titleIcon.setFill(Color.BLUE);
+//        sysTitle.setGraphic(titleIcon);
 
         FontIcon userIcon = new FontIcon("mdal-account_box");
         userIcon.setIconSize(16);
@@ -69,40 +70,27 @@ public class LoginController {
             alert.show();
         } else {
             try {
-                loginUser = UserDAO.findUser(userName.getText(), password.getText());
-            } catch (SQLException e) {
-                Alert alert = new Alert (Alert.AlertType.ERROR);
-                alert.setTitle("提示");
-                alert.setHeaderText("数据库连接不上");
-                alert.setContentText("");
-                alert.show();
-                throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            if(loginUser == null) {
-                Alert alert = new Alert (Alert.AlertType.INFORMATION);
-                alert.setTitle("提示");
-                alert.setHeaderText("用户名或密码不正确");
-                alert.setContentText("");
-                alert.show();
-            } else {
-                System.out.println("remember.isSelected()="+remember.isSelected());
-                //保存配置文件
-                Map<String, Object> data = new HashMap<>();
-                data.put("remember", remember.isSelected());
-                data.put("userName", remember.isSelected()?userName.getText():"");
-                data.put("password", remember.isSelected()?password.getText():"");
-                saveYamlConfFile(data);
+                String name = AESUtils.complexAESEncrypt(userName.getText().trim());
+                String pwd = AESUtils.complexAESEncrypt(password.getText().trim());
+                Login data = new Login(name, pwd, "true"); // 假设有一个Java对象
+                String jsonInputString = JsonUtil.toJson(data); // 将对象转换为JSON字符串
+                String response = HttpUtil.sendPostRequest(APIs.LOGIN, jsonInputString);
+                LoginResponse res = JsonUtil.fromJson(response, LoginResponse.class);
 
+                System.out.println("POST Response: " + res.getData().getAccess_token());
 
                 app.unregisterEnterKey(app.stage.getScene());
                 //进入主界面
                 app.initMainApp();
-                app.enter(loginUser);
-
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    @FXML
+    public void onQuitClick() {
+        System.exit(0);
     }
 
     /**

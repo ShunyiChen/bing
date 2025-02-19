@@ -14,7 +14,7 @@ public class CategoryDAO {
     public static Long insertCategory(Category category) throws SQLException, ClassNotFoundException {
         //Declare a INSERT statement
         String insertStmt =
-                "INSERT INTO sys_category(name, pid) VALUES('"+category.getName()+"',"+category.getPid()+")";
+                "INSERT INTO bing_category(name, pid) VALUES('"+category.getName()+"',"+category.getPid()+")";
         //Execute UPDATE operation
         try {
             return DBUtils.dbExecuteUpdate(insertStmt);
@@ -27,7 +27,7 @@ public class CategoryDAO {
 
     public static List<Category> findAllCategories() throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement
-        String selectStmt = "SELECT id, name, pid FROM sys_category";
+        String selectStmt = "SELECT id, name, pid FROM bing_category";
         //Execute SELECT statement
         try {
             //Get ResultSet from dbExecuteQuery method
@@ -53,7 +53,7 @@ public class CategoryDAO {
     public static void deleteCategory(Long id) throws SQLException, ClassNotFoundException {
         //Declare a UPDATE statement
         String updateStmt =
-                "DELETE from sys_category WHERE id = " + id;
+                "DELETE from bing_category WHERE id = " + id;
         try {
             DBUtils.dbExecuteUpdate(updateStmt);
         } catch (SQLException e) {
@@ -62,7 +62,7 @@ public class CategoryDAO {
         }
 
         updateStmt =
-                "DELETE from sys_subcategory WHERE category_id = " + id;
+                "DELETE from bing_subcategory WHERE category_id = " + id;
         try {
             DBUtils.dbExecuteUpdate(updateStmt);
         } catch (SQLException e) {
@@ -74,7 +74,7 @@ public class CategoryDAO {
     public static void updateCategory(Category category) throws SQLException, ClassNotFoundException {
         //Declare a UPDATE statement
         String updateStmt =
-                "UPDATE sys_category set name='"+category.getName()+"' WHERE id = " + category.getId();
+                "UPDATE bing_category set name='"+category.getName()+"' WHERE id = " + category.getId();
         try {
             DBUtils.dbExecuteUpdate(updateStmt);
         } catch (SQLException e) {

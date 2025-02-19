@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<TabPane prefHeight="652.0" prefWidth="814.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.DIController">
+<TabPane prefHeight="652.0" prefWidth="814.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.DIController">
     <tabs>
         <Tab text="病案导入">
             <BorderPane>
@@ -47,7 +47,7 @@
                 <bottom>
                     <HBox alignment="CENTER" prefHeight="29.0" prefWidth="829.0" BorderPane.alignment="CENTER">
                         <children>
-                            <Button mnemonicParsing="false" onAction="#onImportAction" text="导入">
+                            <Button mnemonicParsing="false" onAction="#onImportAction" prefWidth="60.0" text="导入">
                                 <font>
                                     <Font name="SimSun" size="13.0" />
                                 </font>

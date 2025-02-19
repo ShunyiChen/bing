@@ -13,7 +13,7 @@ public class SubCategoryDAO {
 
     public static List<SubCategory> findListByCategoryId(Long categoryId) throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement
-        String selectStmt = "SELECT id, name, RFE, category_id, shortcut FROM sys_subcategory WHERE category_id = "+categoryId;
+        String selectStmt = "SELECT id, name, RFE, category_id, shortcut FROM bing_sub_category WHERE category_id = "+categoryId;
         //Execute SELECT statement
         try {
             //Get ResultSet from dbExecuteQuery method
@@ -54,7 +54,7 @@ public class SubCategoryDAO {
     public static Long insertSubCategory(SubCategory subCategory) throws SQLException, ClassNotFoundException {
         //Declare a INSERT statement
         String insertStmt =
-                "INSERT INTO sys_subcategory(name, RFE, category_id) VALUES('"+subCategory.getName()+"',"+subCategory.getRFE()+", "+subCategory.getCategoryId()+")";
+                "INSERT INTO bing_sub_category(name, RFE, category_id) VALUES('"+subCategory.getName()+"',"+subCategory.getRFE()+", "+subCategory.getCategoryId()+")";
         //Execute UPDATE operation
         try {
             return DBUtils.dbExecuteUpdate(insertStmt);
@@ -68,7 +68,7 @@ public class SubCategoryDAO {
     public static void updateSubCategory(SubCategory subCategory) throws SQLException, ClassNotFoundException {
         //Declare a UPDATE statement
         String updateStmt =
-                "UPDATE sys_subcategory SET name='"+subCategory.getName()+"', RFE = " + subCategory.getRFE() +", category_id='"+subCategory.getCategoryId()+"' WHERE id = " + subCategory.getId();
+                "UPDATE bing_sub_category SET name='"+subCategory.getName()+"', RFE = " + subCategory.getRFE() +", category_id='"+subCategory.getCategoryId()+"' WHERE id = " + subCategory.getId();
         //Execute UPDATE operation
         try {
             DBUtils.dbExecuteUpdate(updateStmt);
@@ -81,7 +81,7 @@ public class SubCategoryDAO {
     public static void deleteSubCategory(Long id) throws SQLException, ClassNotFoundException {
         //Declare a UPDATE statement
         String updateStmt =
-                "DELETE from sys_subcategory WHERE id = " + id;
+                "DELETE from bing_sub_category WHERE id = " + id;
         //Execute UPDATE operation
         try {
             DBUtils.dbExecuteUpdate(updateStmt);
@@ -101,9 +101,9 @@ public class SubCategoryDAO {
      */
     public static boolean hasExist(String name, String oldName) throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement
-        String selectStmt = "SELECT * FROM sys_subcategory WHERE name='" + name + "'";
+        String selectStmt = "SELECT * FROM bing_sub_category WHERE name='" + name + "'";
         if(!StringUtils.isEmpty(oldName)) {
-            selectStmt = "SELECT * FROM sys_subcategory WHERE name='" + name + "' AND name != '"+oldName+"'";
+            selectStmt = "SELECT * FROM bing_sub_category WHERE name='" + name + "' AND name != '"+oldName+"'";
         }
         //Execute SELECT statement
         try {

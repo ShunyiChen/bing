@@ -7,8 +7,8 @@ plugins {
     id("com.teamdev.jxbrowser") version "1.0.2"
 }
 // 设置 JDK 版本
-project.sourceCompatibility=1.17
-project.targetCompatibility=1.17
+//project.sourceCompatibility=1.17
+//project.targetCompatibility=1.17
 
 jxbrowser {
 //    version = "7.38.1"
@@ -20,15 +20,14 @@ repositories {
     maven {
         url "https://repo.e-iceblue.cn/repository/maven-public/"
     }
-    maven {
-        url "https://europe-maven.pkg.dev/jxbrowser/releases"
-    }
+//    maven {
+//        url "https://europe-maven.pkg.dev/jxbrowser/releases"
+//    }
 }
 
 
 javafx {
-//    version = "17.0.7"
-    version = "21.0.3"
+    version = "21.0.6"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing']
 }
 
@@ -56,11 +55,13 @@ dependencies {
 //    implementation 'eu.hansolo.fx:heatmap:17.0.12'
 //    implementation 'eu.hansolo:toolbox:17.0.43'
 //    implementation 'eu.hansolo:toolboxfx:17.0.33'
+
+
 //   apache pdf
-    implementation 'org.apache.pdfbox:pdfbox:2.0.27'// https://mvnrepository.com/artifact/org.apache.pdfbox/fontbox
-    implementation 'org.apache.pdfbox:fontbox:2.0.27'// https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+//    implementation 'org.apache.pdfbox:pdfbox:2.0.27'// https://mvnrepository.com/artifact/org.apache.pdfbox/fontbox
+//    implementation 'org.apache.pdfbox:fontbox:2.0.27'// https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
 //    spire pdf
-    implementation 'e-iceblue:spire.pdf.free:5.1.0'
+//    implementation 'e-iceblue:spire.pdf.free:5.1.0'
     implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
 
@@ -85,8 +86,12 @@ dependencies {
 //    implementation 'com.teamdev.jxbrowser:jxbrowser-win32:7.12.2'
 //    implementation 'com.teamdev.jxbrowser:jxbrowser-javafx:7.12.2'
 
-    implementation(jxbrowser.crossPlatform)
-    implementation(jxbrowser.javafx)
+//    jxbrowser 7.22
+//    implementation(jxbrowser.crossPlatform)
+//    implementation(jxbrowser.javafx)
+    implementation files("lib/jxbrowser-7.22.jar")
+    implementation files("lib/jxbrowser-win32-7.22.jar")
+    implementation files("lib/jxbrowser-javafx-7.22.jar")
 
 //    jxbrowser 6.24.3
 //    implementation files("lib/jxbrowser-6.24.3.jar")
@@ -97,15 +102,23 @@ dependencies {
     compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
     testCompileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
     implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    // https://mvnrepository.com/artifact/cn.hutool/hutool-all
+    implementation group: 'cn.hutool', name: 'hutool-all', version: '5.8.21'
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
+    implementation group: 'org.bouncycastle', name: 'bcprov-jdk18on', version: '1.80'
+
+
 }
 
 run {
     //破解jxbrowser 6.24.3
-    jvmArgs('--add-opens', 'java.base/java.lang=ALL-UNNAMED')
-    jvmArgs('--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED')
-    jvmArgs('--add-opens', 'javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED')
-    jvmArgs('--add-opens', 'javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED')
-    jvmArgs('--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED')
+//    jvmArgs('--add-opens', 'java.base/java.lang=ALL-UNNAMED')
+//    jvmArgs('--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED')
+//    jvmArgs('--add-opens', 'javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED')
+//    jvmArgs('--add-opens', 'javafx.graphics/com.sun.javafx.tk=ALL-UNNAMED')
+//    jvmArgs('--add-opens', 'javafx.graphics/com.sun.glass.ui=ALL-UNNAMED')
 }
 
 jar {

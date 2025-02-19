@@ -36,7 +36,7 @@ public class ParamsDAO {
 
     public static ObservableList<Settings> findAllParams() throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement
-        String selectStmt = "SELECT * FROM sys_param";
+        String selectStmt = "SELECT * FROM bing_param";
         //Execute SELECT statement
         try {
             //Get ResultSet from dbExecuteQuery method

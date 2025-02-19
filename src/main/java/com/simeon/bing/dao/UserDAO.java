@@ -62,7 +62,7 @@ public class UserDAO {
 
     public static List<User> findAllUsers() throws SQLException, ClassNotFoundException {
         //Declare a SELECT statement
-        String selectStmt = "SELECT * FROM sys_user";
+        String selectStmt = "SELECT * FROM bing_user";
         //Execute SELECT statement
         try {
             //Get ResultSet from dbExecuteQuery method

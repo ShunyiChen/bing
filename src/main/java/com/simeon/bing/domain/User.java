@@ -14,7 +14,7 @@ import java.io.Serializable;
  * 登录用户表
  */
 @Entity
-@Table(name="sys_user")
+@Table(name="bing_user")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

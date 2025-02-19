@@ -22,8 +22,11 @@ public class DBUtils {
     //String connStr = "jdbc:oracle:thin:Username/Password@IP:Port/SID";
     //Username=HR, Password=HR, IP=localhost, IP=1521, SID=xe
 //    private static final String connStr = "jdbc:sqlite:"+ Constants.DB_DATA;
-    private static final String connStr = "jdbc:mysql://rm-cn-o493o4i3h00045qo.rwlb.rds.aliyuncs.com/bing?user=maxtreesoftware&password=cDe3@wsx";
 
+//    bing@rm-uf6kcthq5848nve92.rwlb.rds.aliyuncs.com:3306 [rm-uf6kcthq5848nve92]
+
+//    private static final String connStr = "jdbc:mysql://rm-cn-o493o4i3h00045qo.rwlb.rds.aliyuncs.com/bing?user=maxtreesoftware&password=cDe3@wsx";
+    private static final String connStr = "jdbc:mysql://rm-uf6kcthq5848nve922o.rwlb.rds.aliyuncs.com:3306/bing?useSSL=false&serverTimezone=UTC";
     //Connect to DB
     public static void dbConnect() throws SQLException, ClassNotFoundException {
         //Settings Oracle JDBC Driver
@@ -41,7 +44,7 @@ public class DBUtils {
 
         //Establish the Oracle Connection using Connection String
         try {
-            conn = DriverManager.getConnection(connStr);
+            conn = DriverManager.getConnection(connStr, "knowledgeadmin", "g=+S25h@N2La9a=");
         } catch (SQLException e) {
             System.out.println("Connection Failed! Check output console" + e);
             e.printStackTrace();
