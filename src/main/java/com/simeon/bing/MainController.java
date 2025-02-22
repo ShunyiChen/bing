@@ -1,9 +1,15 @@
 package com.simeon.bing;
 
+import com.simeon.bing.response.GetRoutersResponse;
+import com.simeon.bing.response.LoginResponse;
+import com.simeon.bing.utils.HttpUtil;
+import com.simeon.bing.utils.JsonUtil;
 import com.simeon.bing.utils.RefUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -13,15 +19,24 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Getter;
+import lombok.Setter;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 
+@Getter
+@Setter
 public class MainController {
+    private Stage stage;
     @FXML
-    protected TreeView<String> menuTree;
+    protected BorderPane mainContainer;
+    @FXML
+    protected TreeView<String> routerTree;
+    @FXML
+    protected SplitPane splitPane;
 
 //    @FXML
 //    protected Button btnParamSettings;
@@ -84,30 +99,83 @@ public class MainController {
 //        initAboutStage();
     }
 
+    private void loadRouters(TreeItem<String> parentItem, GetRoutersResponse.D[] data) {
+        if(data != null) {
+            for(GetRoutersResponse.D d : data) {
+                if(!d.getHidden()) {
+                    // 创建子节点
+                    TreeItem<String> item = new TreeItem<>(d.getMeta().getTitle());
+                    parentItem.getChildren().add(item);
+                    loadRouters(item, d.getChildren());
+                }
+            }
+        }
+    }
+
     private void initMenuTree() {
         // 创建根节点
-        TreeItem<String> rootNode = new TreeItem<>("Root Folder");
+        TreeItem<String> rootNode = new TreeItem<>("功能列表");
         rootNode.setExpanded(true); // 展开根节点
+        try {
+            String response = HttpUtil.sendGetRequest(APIs.GET_ROUTERS, TokenStore.getToken());
+            GetRoutersResponse res = JsonUtil.fromJson(response, GetRoutersResponse.class);
+            loadRouters(rootNode, res.getData());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // 创建子节点
-        TreeItem<String> folder1 = new TreeItem<>("Folder 1");
-        TreeItem<String> folder2 = new TreeItem<>("Folder 2");
-
-        TreeItem<String> file1 = new TreeItem<>("File 1.txt");
-        TreeItem<String> file2 = new TreeItem<>("File 2.doc");
-        TreeItem<String> file3 = new TreeItem<>("File 3.pdf");
-
-        // 构建树形结构
-        folder1.getChildren().addAll(file1, file2);
-        folder2.getChildren().add(file3);
-        rootNode.getChildren().addAll(folder1, folder2);
+//        // 构建树形结构
+//        folder1.getChildren().addAll(file1, file2);
+//        folder2.getChildren().add(file3);
+//        rootNode.getChildren().addAll(folder1, folder2);
 
         // 创建 TreeView
 //        TreeView<String> treeView = new TreeView<>(rootNode);
-        menuTree.setRoot(rootNode);
+        routerTree.setRoot(rootNode);
+        // 为TreeView设置鼠标点击事件
+        routerTree.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 1 && event.getButton() == MouseButton.PRIMARY) {
+                TreeItem<String> selectedItem = routerTree.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    // 处理双击事件
+                    if("系统参数".equals(selectedItem.getValue())) {
+                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("system-parameters-view.fxml"));
+                        try {
+                            BorderPane pane = loader.load();
+                            SystemParametersController controller = loader.getController();
+                            mainContainer.setCenter(pane);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else if("数据交互".equals(selectedItem.getValue())) {
+                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("data-interaction-view.fxml"));
+                        try {
+                            BorderPane pane = loader.load();
+                            DataInteractionController controller = loader.getController();
+                            controller.setStage(stage);
+                            mainContainer.setCenter(pane);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    } else if("病案管理".equals(selectedItem.getValue())) {
+                        mainContainer.setCenter(new BorderPane());
+                    } else if("数字化加工（高拍）".equals(selectedItem.getValue())) {
+                        mainContainer.setCenter(new BorderPane());
+                    }
+                }
+            }
+        });
+
     }
 
     private void initUserProfileMenu() {
+//        病案数字化 - Case Digitalization
+//        系统参数 - System Parameters
+//        病案管理 - Case Management
+//        数字化加工（高拍）- Digital Processing (High-Speed Scanning)
+//        数据交互 - Data Interaction
+
+
         MenuItem itemAboutSys = new MenuItem("关于系统");
         MenuItem itemExit = new MenuItem("退出系统");
         itemAboutSys.setStyle("-fx-font-size: 13px;-fx-font-family:SimSun;");

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="830.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.DataInteractionImportController">
+   <center>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <top>
+            <BorderPane prefHeight="37.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <left>
+                  <HBox alignment="CENTER_LEFT" prefHeight="37.0" prefWidth="154.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label text="类型" />
+                        <RadioButton fx:id="btnWM" layoutX="34.0" layoutY="21.0" mnemonicParsing="false" selected="true" text="西医">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="type" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="btnTCM" mnemonicParsing="false" text="中医" toggleGroup="$type" />
+                     </children>
+                  </HBox>
+               </left>
+               <center>
+                  <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <left>
+                        <Label text="文件" BorderPane.alignment="CENTER" />
+                     </left>
+                     <center>
+                        <TextField fx:id="pathTextField" editable="false" prefHeight="23.0" style="-fx-padding: 0;" BorderPane.alignment="CENTER" />
+                     </center>
+                     <right>
+                        <Button mnemonicParsing="false" onAction="#handleBrowsing" text="浏览" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+               </center>
+            </BorderPane>
+         </top>
+         <center>
+            <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <content>
+                  <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="institutionCodeCol" prefWidth="75.0" text="机构代码" />
+                      <TableColumn fx:id="institutionNameCol" prefWidth="75.0" text="机构名称" />
+                        <TableColumn fx:id="medicalRecordNumberCol" prefWidth="75.0" text="病案号" />
+                        <TableColumn fx:id="hospitalizationCountCol" prefWidth="75.0" text="住院次数" />
+                        <TableColumn fx:id="admissionDateCol" prefWidth="75.0" text="入院日期" />
+                        <TableColumn fx:id="dischargeDateCol" prefWidth="75.0" text="出院日期" />
+                        <TableColumn fx:id="patientNameCol" prefWidth="75.0" text="姓名" />
+                        <TableColumn fx:id="genderCol" prefWidth="75.0" text="性别" />
+                        <TableColumn fx:id="birthDateCol" prefWidth="75.0" text="出生日期" />
+                        <TableColumn fx:id="ageCol" prefWidth="75.0" text="年龄" />
+                        <TableColumn fx:id="dischargeMethodCol" prefWidth="75.0" text="离院方式" />
+                    </columns>
+                  </TableView>
+               </content>
+            </ScrollPane>
+         </center>
+         <bottom>
+            <BorderPane prefHeight="34.0" prefWidth="830.0" BorderPane.alignment="CENTER">
+               <center>
+                  <Button mnemonicParsing="false" onAction="#handleImport" text="导 入" BorderPane.alignment="CENTER" />
+               </center>
+            </BorderPane>
+         </bottom>
+      </BorderPane>
+   </center>
+</BorderPane>

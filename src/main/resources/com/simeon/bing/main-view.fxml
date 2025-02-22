@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
-<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.TreeView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="841.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.MainController">
@@ -27,7 +26,7 @@
          <center>
             <BorderPane prefHeight="77.0" prefWidth="841.0" BorderPane.alignment="CENTER">
                <left>
-                  <Label text="病案数字化上传系统（高拍）" BorderPane.alignment="CENTER">
+                  <Label text="病案数字化上传系统（高拍）V2.0" BorderPane.alignment="CENTER">
                      <font>
                         <Font size="21.0" />
                      </font>
@@ -40,7 +39,7 @@
    <center>
       <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
-            <SplitPane dividerPositions="0.1" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <SplitPane fx:id="splitPane" dividerPositions="0.1" prefHeight="200.0" prefWidth="200.0" style="-fx-border-width: 1px;" BorderPane.alignment="CENTER">
                <items>
                   <BorderPane prefHeight="200.0" prefWidth="200.0">
                      <center>
@@ -48,7 +47,7 @@
                            <center>
                               <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="513.0" prefWidth="390.0" BorderPane.alignment="CENTER">
                                  <content>
-                                    <TreeView fx:id="menuTree" prefHeight="511.0" prefWidth="389.0" />
+                                    <TreeView fx:id="routerTree" prefHeight="511.0" prefWidth="389.0" />
                                  </content>
                               </ScrollPane>
                            </center>
@@ -58,32 +57,18 @@
                         </BorderPane>
                      </center>
                      <left>
-                        <BorderPane prefHeight="513.0" prefWidth="28.0" BorderPane.alignment="CENTER" />
+                        <BorderPane prefHeight="513.0" prefWidth="28.0" style="-fx-background-color: rgb(23,156,243);" BorderPane.alignment="CENTER">
+                           <top>
+                              <VBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="28.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button mnemonicParsing="false" />
+                                    <Button mnemonicParsing="false" />
+                                 </children>
+                              </VBox>
+                           </top></BorderPane>
                      </left>
                   </BorderPane>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0">
-                     <center>
-                        <Accordion BorderPane.alignment="CENTER">
-                          <panes>
-                            <TitledPane animated="false" text="untitled 1">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                              </content>
-                            </TitledPane>
-                            <TitledPane animated="false" text="untitled 2">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                              </content>
-                            </TitledPane>
-                            <TitledPane animated="false" text="untitled 3">
-                              <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                              </content>
-                            </TitledPane>
-                          </panes>
-                        </Accordion>
-                     </center>
-                  </BorderPane>
+                  <BorderPane fx:id="mainContainer" prefHeight="200.0" prefWidth="200.0" />
                </items>
             </SplitPane>
          </center>

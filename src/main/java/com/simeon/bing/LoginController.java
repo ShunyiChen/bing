@@ -69,7 +69,7 @@ public class LoginController {
                 String pwd = AESUtils.complexAESEncrypt(password.getText().trim());
                 Login data = new Login(name, pwd, "true"); // 假设有一个Java对象
                 String jsonInputString = JsonUtil.toJson(data); // 将对象转换为JSON字符串
-                String response = HttpUtil.sendPostRequest(APIs.LOGIN, jsonInputString);
+                String response = HttpUtil.sendPostRequest(APIs.LOGIN, jsonInputString, "");
                 LoginResponse res = JsonUtil.fromJson(response, LoginResponse.class);
                 if(res.getData() == null) {
                     Alert alert = new Alert (Alert.AlertType.INFORMATION);
@@ -81,9 +81,9 @@ public class LoginController {
                 }
                 TokenStore.saveToken(res.getData().getAccess_token());
                 app.unregisterEnterKey(app.stage.getScene());
-                //进入主界面
-                app.initMainApp();
-                app.enter();
+                //打开主界面
+                app.openMainWindow();
+                app.runLoadingTask();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -34,7 +34,7 @@
                                     <TableColumn fx:id="colTimes" prefWidth="75.0" text="住院次数" />
                                     <TableColumn fx:id="colAdmitDate" prefWidth="150.0" text="入院日期" />
                                     <TableColumn fx:id="colDischargeDate" prefWidth="150.0" text="出院日期" />
-                                    <TableColumn fx:id="colName" prefWidth="75.0" text="性名" />
+                                    <TableColumn fx:id="colName" prefWidth="75.0" text="姓名" />
                                     <TableColumn fx:id="colGender" prefWidth="75.0" text="性别" />
                                     <TableColumn fx:id="colBirthdate" prefWidth="150.0" text="出生日期" />
                                     <TableColumn fx:id="colAge" prefWidth="75.0" text="年龄" />
@@ -79,7 +79,7 @@
                               <TableColumn fx:id="colStatus" prefWidth="120.0" text="制作状态" />
                               <TableColumn fx:id="colPage" prefWidth="67.0" text="制作页数" />
                               <TableColumn fx:id="colHospitalNum" prefWidth="120.0" text="住院号" />
-                              <TableColumn fx:id="colEName" prefWidth="90.0" text="性名" />
+                              <TableColumn fx:id="colEName" prefWidth="90.0" text="姓名" />
                               <TableColumn fx:id="colEAdmitDate" prefWidth="150.0" text="入院日期" />
                               <TableColumn fx:id="colDept" prefWidth="99.0" text="入院科室" />
                               <TableColumn fx:id="colEDischargeDate" prefWidth="127.0" text="出院日期" />
@@ -186,7 +186,7 @@
                                     <Font name="SimSun" size="13.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="125.0" text="性名:" GridPane.columnIndex="6" GridPane.rowIndex="2">
+                              <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="125.0" text="姓名:" GridPane.columnIndex="6" GridPane.rowIndex="2">
                                  <font>
                                     <Font name="SimHei" size="13.0" />
                                  </font>

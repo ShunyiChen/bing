@@ -13,14 +13,16 @@ public class HttpUtil {
      * 发送GET请求
      *
      * @param urlString 请求URL
+     * @param accessToken accessToken
      * @return 响应内容
      * @throws Exception 如果请求失败
      */
-    public static String sendGetRequest(String urlString) throws Exception {
+    public static String sendGetRequest(String urlString, String accessToken) throws Exception {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Authorization", "Bearer " + accessToken); // 添加Authorization头
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -43,15 +45,17 @@ public class HttpUtil {
      *
      * @param urlString 请求URL
      * @param jsonInputString JSON格式的请求体
+     * @param accessToken accessToken
      * @return 响应内容
      * @throws Exception 如果请求失败
      */
-    public static String sendPostRequest(String urlString, String jsonInputString) throws Exception {
+    public static String sendPostRequest(String urlString, String jsonInputString, String accessToken) throws Exception {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json; utf-8");
         connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Authorization", "Bearer " + accessToken); // 添加Authorization头
         connection.setDoOutput(true);
 
         // 发送请求体
