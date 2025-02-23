@@ -14,7 +14,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" onAction="#handleImport" text="病案导入" />
-                  <Button mnemonicParsing="false" onAction="#handleExport" text="病案导出" />
+                  <Button mnemonicParsing="false" onAction="#handleExport" text="病案导出" visible="false" />
                </children>
             </HBox>
          </bottom>
@@ -28,6 +28,7 @@
          <content>
             <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
               <columns>
+                  <TableColumn fx:id="rowNumberCol" prefWidth="75.0" text="序号" />
                 <TableColumn fx:id="institutionCodeCol" prefWidth="75.0" text="机构代码" />
                 <TableColumn fx:id="institutionNameCol" prefWidth="75.0" text="机构名称" />
                   <TableColumn fx:id="medicalRecordNumberCol" prefWidth="75.0" text="病案号" />
@@ -39,6 +40,11 @@
                   <TableColumn fx:id="birthDateCol" prefWidth="75.0" text="出生日期" />
                   <TableColumn fx:id="ageCol" prefWidth="75.0" text="年龄" />
                   <TableColumn fx:id="dischargeMethodCol" prefWidth="75.0" text="离院方式" />
+                  <TableColumn fx:id="typeCol" prefWidth="75.0" text="病案类型" />
+                  <TableColumn fx:id="createByCol" prefWidth="75.0" text="创建者" />
+                  <TableColumn fx:id="createTimeCol" prefWidth="75.0" text="创建时间" />
+                  <TableColumn fx:id="updateByCol" prefWidth="75.0" text="最近更新者" />
+                  <TableColumn fx:id="updateTimeCol" prefWidth="75.0" text="最近更新时间" />
               </columns>
             </TableView>
          </content>

@@ -33,6 +33,8 @@ public class DataInteractionImportController {
     @FXML
     protected TableView<PatientRecord> tableView;
     @FXML
+    protected TableColumn<PatientRecord, Integer> rowNumberCol;
+    @FXML
     protected TableColumn<PatientRecord, String> institutionCodeCol;
     @FXML
     protected TableColumn<PatientRecord, String> institutionNameCol;
@@ -59,6 +61,7 @@ public class DataInteractionImportController {
     private void initialize() {
         // 初始化表格列
         DateFormat format = new SimpleDateFormat(FORMAT);
+        rowNumberCol.setCellValueFactory(param -> new SimpleIntegerProperty( tableView.getItems().indexOf(param.getValue()) + 1).asObject());
         // Setting up the cell value factories for the table columns
         institutionCodeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getInstitutionCode() != null

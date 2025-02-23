@@ -49,6 +49,7 @@
                <content>
                   <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
+                        <TableColumn fx:id="rowNumberCol" prefWidth="75.0" text="序号" />
                       <TableColumn fx:id="institutionCodeCol" prefWidth="75.0" text="机构代码" />
                       <TableColumn fx:id="institutionNameCol" prefWidth="75.0" text="机构名称" />
                         <TableColumn fx:id="medicalRecordNumberCol" prefWidth="75.0" text="病案号" />

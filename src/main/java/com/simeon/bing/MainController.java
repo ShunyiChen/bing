@@ -157,7 +157,7 @@ public class MainController {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                    } else if("病案管理".equals(selectedItem.getValue())) {
+                    } else if("批量上传".equals(selectedItem.getValue())) {
                         mainContainer.setCenter(new BorderPane());
                     } else if("数字化加工（高拍）".equals(selectedItem.getValue())) {
                         mainContainer.setCenter(new BorderPane());

@@ -31,4 +31,14 @@ public class PatientRecord {
     private Integer age;
     /** 离院方式 */
     private Integer dischargeMethod;
+    /** 病案类型 0-西医 1中医 */
+    private Integer type;
+    /** 创建者 */
+    private String createBy;
+    /** 创建时间 */
+    private Date createTime;
+    /** 更新者 */
+    private String updateBy;
+    /** 更新时间 */
+    private Date updateTime;
 }

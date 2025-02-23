@@ -33,6 +33,8 @@ public class DataInteractionController {
     @FXML
     protected TableView<PatientRecord> tableView;
     @FXML
+    protected TableColumn<PatientRecord, Integer> rowNumberCol;
+    @FXML
     protected TableColumn<PatientRecord, String> institutionCodeCol;
     @FXML
     protected TableColumn<PatientRecord, String> institutionNameCol;
@@ -54,6 +56,17 @@ public class DataInteractionController {
     protected TableColumn<PatientRecord, Integer> ageCol;
     @FXML
     protected TableColumn<PatientRecord, Integer> dischargeMethodCol;
+    @FXML
+    protected TableColumn<PatientRecord, Integer> typeCol;
+    @FXML
+    protected TableColumn<PatientRecord, String> createByCol;
+    @FXML
+    protected TableColumn<PatientRecord, String> createTimeCol;
+    @FXML
+    protected TableColumn<PatientRecord, String> updateByCol;
+    @FXML
+    protected TableColumn<PatientRecord, String> updateTimeCol;
+
 
     @FXML
     private void initialize() {
@@ -71,21 +84,23 @@ public class DataInteractionController {
 
         // 初始化表格列
         DateFormat format = new SimpleDateFormat(FORMAT);
+        // 设置每一行序号
+        rowNumberCol.setCellValueFactory(param -> new SimpleIntegerProperty( tableView.getItems().indexOf(param.getValue()) + 1).asObject());
         // Setting up the cell value factories for the table columns
         institutionCodeCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getInstitutionCode() != null
-                        ? param.getValue().getInstitutionCode()
-                        : ""
+            param.getValue().getInstitutionCode() != null
+                ? param.getValue().getInstitutionCode()
+                : ""
         ));
         institutionNameCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getInstitutionName() != null
-                        ? param.getValue().getInstitutionName()
-                        : ""
+            param.getValue().getInstitutionName() != null
+                ? param.getValue().getInstitutionName()
+                : ""
         ));
         medicalRecordNumberCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getMedicalRecordNumber() != null
-                        ? param.getValue().getMedicalRecordNumber()
-                        : ""
+            param.getValue().getMedicalRecordNumber() != null
+                ? param.getValue().getMedicalRecordNumber()
+                : ""
         ));
         medicalRecordNumberCol.setCellValueFactory(param -> {
             PatientRecord record = param.getValue();
@@ -98,14 +113,14 @@ public class DataInteractionController {
             return new SimpleIntegerProperty(hospitalizationCount != null ? hospitalizationCount : 0).asObject();
         });
         admissionDateCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getAdmissionDate() != null
-                        ? format.format(param.getValue().getAdmissionDate())
-                        : ""
+            param.getValue().getAdmissionDate() != null
+                ? format.format(param.getValue().getAdmissionDate())
+                : ""
         ));
         dischargeDateCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getDischargeDate() != null
-                        ? format.format(param.getValue().getDischargeDate())
-                        : ""
+            param.getValue().getDischargeDate() != null
+                ? format.format(param.getValue().getDischargeDate())
+                : ""
         ));
         patientNameCol.setCellValueFactory(param -> {
             String patientName = (param.getValue().getPatientName() != null) ? param.getValue().getPatientName() : "";
@@ -116,9 +131,9 @@ public class DataInteractionController {
             return new SimpleObjectProperty<>(gender);
         });
         birthDateCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getBirthDate() != null
-                        ? format.format(param.getValue().getBirthDate())
-                        : ""
+            param.getValue().getBirthDate() != null
+                ? format.format(param.getValue().getBirthDate())
+                : ""
         ));
         ageCol.setCellValueFactory(param -> {
             Integer age = param.getValue().getAge();
@@ -130,12 +145,34 @@ public class DataInteractionController {
             // 如果 hospitalizationCount 为 null，使用 0 作为默认值
             return new SimpleIntegerProperty(dischargeMethod != null ? dischargeMethod : 0).asObject();
         });
+        typeCol.setCellValueFactory(param -> {
+            Integer type = param.getValue().getType();
+            // 如果 hospitalizationCount 为 null，使用 0 作为默认值
+            return new SimpleIntegerProperty(type != null ? type : 0).asObject();
+        });
+        createByCol.setCellValueFactory(param -> {
+            String createBy = (param.getValue().getCreateBy() != null) ? param.getValue().getCreateBy() : "";
+            return new SimpleObjectProperty<>(createBy);
+        });
+        createTimeCol.setCellValueFactory(param -> new SimpleStringProperty(
+            param.getValue().getCreateTime() != null
+                ? format.format(param.getValue().getCreateTime())
+                : ""
+        ));
+        updateByCol.setCellValueFactory(param -> {
+            String updateBy = (param.getValue().getUpdateBy() != null) ? param.getValue().getUpdateBy() : "";
+            return new SimpleObjectProperty<>(updateBy);
+        });
+        updateTimeCol.setCellValueFactory(param -> new SimpleStringProperty(
+            param.getValue().getUpdateTime() != null
+                ? format.format(param.getValue().getUpdateTime())
+                : ""
+        ));
 
         PatientRecord d = new PatientRecord();
         d.setInstitutionCode("AB");
         d.setDischargeMethod(1);
         tableView.getItems().add(d);
-
     }
 
     @FXML
