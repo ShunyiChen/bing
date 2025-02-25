@@ -1,15 +1,11 @@
-package com.simeon.bing.model;
+package com.simeon.bing.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
-@Setter
-@Getter
-public class PatientRecord extends BaseEntity {
-    private Long id;
+@Data
+public class GetRecordsReq {
     /** 机构代码 */
     private String institutionCode;
     /** 机构名称 */
@@ -27,7 +23,6 @@ public class PatientRecord extends BaseEntity {
     /** 性别 */
     private String gender;
     /** 出生日期 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthDate;
     /** 年龄 */
     private Integer age;
@@ -35,4 +30,17 @@ public class PatientRecord extends BaseEntity {
     private Integer dischargeMethod;
     /** 病案类型 0-西医 1中医 */
     private Integer type;
+    /** 创建者 */
+    private String createBy;
+    /** 创建时间 */
+    private Date createTime;
+    /** 更新者 */
+    private String updateBy;
+    /** 更新时间 */
+    private Date updateTime;
+
+    /** pageNum(非字段) 页数 */
+    private Integer pageNum;
+    /** pageSize(非字段) 每页数量 */
+    private Integer pageSize;
 }

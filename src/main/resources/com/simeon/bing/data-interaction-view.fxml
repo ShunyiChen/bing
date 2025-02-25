@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -13,7 +14,10 @@
          <bottom>
             <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleImport" text="病案导入" />
+                  <Button mnemonicParsing="false" onAction="#handleImport" text="病案导入">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin></Button>
                   <Button mnemonicParsing="false" onAction="#handleExport" text="病案导出" visible="false" />
                </children>
             </HBox>

@@ -124,13 +124,6 @@ public class MainController {
             e.printStackTrace();
         }
 
-//        // 构建树形结构
-//        folder1.getChildren().addAll(file1, file2);
-//        folder2.getChildren().add(file3);
-//        rootNode.getChildren().addAll(folder1, folder2);
-
-        // 创建 TreeView
-//        TreeView<String> treeView = new TreeView<>(rootNode);
         routerTree.setRoot(rootNode);
         // 为TreeView设置鼠标点击事件
         routerTree.setOnMouseClicked(event -> {
@@ -138,16 +131,7 @@ public class MainController {
                 TreeItem<String> selectedItem = routerTree.getSelectionModel().getSelectedItem();
                 if (selectedItem != null) {
                     // 处理双击事件
-                    if("系统参数".equals(selectedItem.getValue())) {
-                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("system-parameters-view.fxml"));
-                        try {
-                            BorderPane pane = loader.load();
-                            SystemParametersController controller = loader.getController();
-                            mainContainer.setCenter(pane);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    } else if("数据交互".equals(selectedItem.getValue())) {
+                    if("病案管理".equals(selectedItem.getValue())) {
                         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("data-interaction-view.fxml"));
                         try {
                             BorderPane pane = loader.load();
@@ -157,10 +141,19 @@ public class MainController {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                    } else if("批量上传".equals(selectedItem.getValue())) {
+                    } else if("数字化加工(高拍)".equals(selectedItem.getValue())) {
                         mainContainer.setCenter(new BorderPane());
-                    } else if("数字化加工（高拍）".equals(selectedItem.getValue())) {
+                    } else if("上传病案".equals(selectedItem.getValue())) {
                         mainContainer.setCenter(new BorderPane());
+                    } else if("参数设置".equals(selectedItem.getValue())) {
+                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("system-parameters-view.fxml"));
+                        try {
+                            BorderPane pane = loader.load();
+                            SystemParametersController controller = loader.getController();
+                            mainContainer.setCenter(pane);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 }
             }
@@ -169,13 +162,6 @@ public class MainController {
     }
 
     private void initUserProfileMenu() {
-//        病案数字化 - Case Digitalization
-//        系统参数 - System Parameters
-//        病案管理 - Case Management
-//        数字化加工（高拍）- Digital Processing (High-Speed Scanning)
-//        数据交互 - Data Interaction
-
-
         MenuItem itemAboutSys = new MenuItem("关于系统");
         MenuItem itemExit = new MenuItem("退出系统");
         itemAboutSys.setStyle("-fx-font-size: 13px;-fx-font-family:SimSun;");

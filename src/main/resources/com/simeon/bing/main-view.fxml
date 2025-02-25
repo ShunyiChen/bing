@@ -57,7 +57,7 @@
                         </BorderPane>
                      </center>
                      <left>
-                        <BorderPane prefHeight="513.0" prefWidth="28.0" style="-fx-background-color: rgb(23,156,243);" BorderPane.alignment="CENTER">
+                        <BorderPane prefHeight="513.0" prefWidth="28.0" style="-fx-background-color: rgb(0,150,201);" BorderPane.alignment="CENTER">
                            <top>
                               <VBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="28.0" BorderPane.alignment="CENTER">
                                  <children>

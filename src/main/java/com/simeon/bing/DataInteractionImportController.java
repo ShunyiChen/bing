@@ -1,6 +1,10 @@
 package com.simeon.bing;
 
 import com.simeon.bing.model.PatientRecord;
+import com.simeon.bing.request.BatchAddReq;
+import com.simeon.bing.response.BatchAddRes;
+import com.simeon.bing.utils.HttpUtil;
+import com.simeon.bing.utils.JsonUtil;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -173,7 +177,7 @@ public class DataInteractionImportController {
                     record.setBirthDate(dateFormat.parse(values[9].trim()));
                     record.setAge(Integer.parseInt(values[10].trim()));
                     record.setDischargeMethod(Integer.parseInt(values[11].trim()));
-
+                    record.setType(btnWM.isSelected()?0:1);
                     // 添加到记录列表
                     tableView.getItems().add(record);
                 }
@@ -194,14 +198,30 @@ public class DataInteractionImportController {
             alert.setContentText("");
             alert.show();
         } else {
-
-
-            Alert alert = new Alert (Alert.AlertType.INFORMATION);
-            alert.initOwner(stage);
-            alert.setTitle("提示");
-            alert.setHeaderText("导入成功");
-            alert.setContentText("");
-            alert.show();
+            try {
+                BatchAddReq batchAdd = new BatchAddReq();
+                batchAdd.setData(tableView.getItems());
+                String jsonInputString = JsonUtil.toJson(batchAdd); // 将对象转换为JSON字符串
+                String response = HttpUtil.sendPostRequest(APIs.ADD_RECORDS, jsonInputString, TokenStore.getToken());
+                BatchAddRes res = JsonUtil.fromJson(response, BatchAddRes.class);
+                if(res.getData() == null) {
+                    Alert alert = new Alert (Alert.AlertType.INFORMATION);
+                    alert.initOwner(stage);
+                    alert.setTitle("提示");
+                    alert.setHeaderText("导入成功");
+                    alert.setContentText("");
+                    alert.show();
+                } else {
+                    Alert alert = new Alert (Alert.AlertType.ERROR);
+                    alert.initOwner(stage);
+                    alert.setTitle("提示");
+                    alert.setHeaderText("导入失败");
+                    alert.setContentText("");
+                    alert.show();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

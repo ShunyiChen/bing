@@ -1,12 +1,16 @@
 package com.simeon.bing;
 
 import com.simeon.bing.model.PatientRecord;
+import com.simeon.bing.request.GetRecordsReq;
+import com.simeon.bing.response.GetRecordsRes;
+import com.simeon.bing.response.LoginResponse;
+import com.simeon.bing.utils.HttpUtil;
+import com.simeon.bing.utils.JsonUtil;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
@@ -26,7 +30,8 @@ import java.text.SimpleDateFormat;
 @Getter
 @Setter
 public class DataInteractionController {
-    private static final String FORMAT = "yyyy-MM-dd";
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private Stage stage;
     @FXML
     protected BorderPane searchPane;
@@ -83,7 +88,8 @@ public class DataInteractionController {
         }
 
         // 初始化表格列
-        DateFormat format = new SimpleDateFormat(FORMAT);
+        DateFormat format = new SimpleDateFormat(DATE_FORMAT);
+        DateFormat dateTimeFormat = new SimpleDateFormat(DATETIME_FORMAT);
         // 设置每一行序号
         rowNumberCol.setCellValueFactory(param -> new SimpleIntegerProperty( tableView.getItems().indexOf(param.getValue()) + 1).asObject());
         // Setting up the cell value factories for the table columns
@@ -154,25 +160,41 @@ public class DataInteractionController {
             String createBy = (param.getValue().getCreateBy() != null) ? param.getValue().getCreateBy() : "";
             return new SimpleObjectProperty<>(createBy);
         });
+        createTimeCol.setPrefWidth(160);
         createTimeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getCreateTime() != null
-                ? format.format(param.getValue().getCreateTime())
-                : ""
+            ? dateTimeFormat.format(param.getValue().getCreateTime())
+            : ""
         ));
         updateByCol.setCellValueFactory(param -> {
             String updateBy = (param.getValue().getUpdateBy() != null) ? param.getValue().getUpdateBy() : "";
             return new SimpleObjectProperty<>(updateBy);
         });
+        updateTimeCol.setPrefWidth(160);
         updateTimeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getUpdateTime() != null
-                ? format.format(param.getValue().getUpdateTime())
-                : ""
+            ? dateTimeFormat.format(param.getValue().getUpdateTime())
+            : ""
         ));
 
-        PatientRecord d = new PatientRecord();
-        d.setInstitutionCode("AB");
-        d.setDischargeMethod(1);
-        tableView.getItems().add(d);
+        // 初始化病案列表
+        initRecordsTable();
+    }
+
+    private void initRecordsTable() {
+        GetRecordsReq getRecordsReq = new GetRecordsReq();
+        getRecordsReq.setPageNum(0);
+        getRecordsReq.setPageSize(50);
+        String jsonInputString; // 将对象转换为JSON字符串
+        try {
+            jsonInputString = JsonUtil.toJson(getRecordsReq);
+            String response = HttpUtil.sendPostRequest(APIs.GET_RECORDS, jsonInputString, TokenStore.getToken());
+            GetRecordsRes res = JsonUtil.fromJson(response, GetRecordsRes.class);
+//            System.out.println(JsonUtil.toJson(res));
+            tableView.getItems().addAll(res.getRows());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @FXML

@@ -5,4 +5,6 @@ public class APIs {
     public static String LOGIN = BASE_URL + "/auth/login";
     public static String LOGOUT = BASE_URL + "/auth/logout";
     public static String GET_ROUTERS = BASE_URL + "/system/menu/getRouters";
+    public static String ADD_RECORDS = BASE_URL + "/bing/record";
+    public static String GET_RECORDS = BASE_URL + "/bing/record/list";
 }

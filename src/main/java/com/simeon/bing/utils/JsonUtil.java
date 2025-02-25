@@ -1,10 +1,16 @@
 package com.simeon.bing.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        // 配置 ObjectMapper 忽略未知属性
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     /**
      * 将Java对象转换为JSON字符串
