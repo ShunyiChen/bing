@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,8 @@ import java.text.SimpleDateFormat;
 public class DataInteractionImportController {
     private static final String FORMAT = "yyyy-MM-dd";
     private Stage stage;
+    private Callback<Void, Void> refreshDataCallback;
+
     @FXML
     protected RadioButton btnWM;
     @FXML
@@ -205,12 +208,24 @@ public class DataInteractionImportController {
                 String response = HttpUtil.sendPostRequest(APIs.ADD_RECORDS, jsonInputString, TokenStore.getToken());
                 BatchAddRes res = JsonUtil.fromJson(response, BatchAddRes.class);
                 if(res.getData() == null) {
-                    Alert alert = new Alert (Alert.AlertType.INFORMATION);
-                    alert.initOwner(stage);
-                    alert.setTitle("提示");
-                    alert.setHeaderText("导入成功");
-                    alert.setContentText("");
-                    alert.show();
+                    if(res.getCode() == 500) {
+                        Alert alert = new Alert (Alert.AlertType.ERROR);
+                        alert.initOwner(stage);
+                        alert.setTitle("提示");
+                        alert.setHeaderText(res.getMsg());
+                        alert.setContentText("");
+                        alert.show();
+                    } else {
+                        //刷新数据
+                        refreshDataCallback.call(null);
+
+                        Alert alert = new Alert (Alert.AlertType.INFORMATION);
+                        alert.initOwner(stage);
+                        alert.setTitle("提示");
+                        alert.setHeaderText(res.getMsg());
+                        alert.setContentText("");
+                        alert.show();
+                    }
                 } else {
                     Alert alert = new Alert (Alert.AlertType.ERROR);
                     alert.initOwner(stage);

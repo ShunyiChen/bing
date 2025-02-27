@@ -3,7 +3,6 @@ package com.simeon.bing;
 import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.request.GetRecordsReq;
 import com.simeon.bing.response.GetRecordsRes;
-import com.simeon.bing.response.LoginResponse;
 import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -19,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,6 +33,9 @@ public class DataInteractionController {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private Stage stage;
+    private GetRecordsReq queryParam = GetRecordsReq.builder().pageNum(1).pageSize(30).build();
+    private TablePageController tablePageController;
+
     @FXML
     protected BorderPane searchPane;
     @FXML
@@ -71,18 +74,47 @@ public class DataInteractionController {
     protected TableColumn<PatientRecord, String> updateByCol;
     @FXML
     protected TableColumn<PatientRecord, String> updateTimeCol;
-
+    @FXML
+    protected BorderPane pageFooter;
 
     @FXML
     private void initialize() {
         // 设置查询组件
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("data-interaction-search-view.fxml"));
+        FXMLLoader searchLoader = new FXMLLoader(MainApplication.class.getResource("data-interaction-search-view.fxml"));
+        // 设置查询组件
+        FXMLLoader pageLoader = new FXMLLoader(MainApplication.class.getResource("table-page-view.fxml"));
         try {
-            BorderPane pane = loader.load();
+            BorderPane pane = searchLoader.load();
+            DataInteractionSearchController controller = searchLoader.getController();
+
+            BorderPane pagePane = pageLoader.load();
+            tablePageController = pageLoader.getController();
+
+            controller.setQueryParam(queryParam);
+            controller.setSearchCallBack(callbackParam -> {
+                queryParam = callbackParam.getQueryParam();
+                tablePageController.updatePagination(callbackParam);
+                tableView.getItems().clear();
+                tableView.getItems().addAll(callbackParam.getResults());
+                tableView.refresh();
+                return null;
+            });
             // 设置 pane 占满整个区域
             pane.setMaxWidth(Double.MAX_VALUE);
             pane.setMaxHeight(Double.MAX_VALUE);
             searchPane.setCenter(pane);
+
+            tablePageController.setQueryParam(queryParam);
+            tablePageController.setSearchCallBack(callbackParam -> {
+                queryParam = callbackParam.getQueryParam();
+                tableView.getItems().clear();
+                tableView.getItems().addAll(callbackParam.getResults());
+                tableView.refresh();
+                return null;
+            });
+            pageFooter.setCenter(pagePane);
+            //首次查询
+            tablePageController.goToTheHomepage();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -95,18 +127,18 @@ public class DataInteractionController {
         // Setting up the cell value factories for the table columns
         institutionCodeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getInstitutionCode() != null
-                ? param.getValue().getInstitutionCode()
-                : ""
+            ? param.getValue().getInstitutionCode()
+            : ""
         ));
         institutionNameCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getInstitutionName() != null
-                ? param.getValue().getInstitutionName()
-                : ""
+            ? param.getValue().getInstitutionName()
+            : ""
         ));
         medicalRecordNumberCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getMedicalRecordNumber() != null
-                ? param.getValue().getMedicalRecordNumber()
-                : ""
+            ? param.getValue().getMedicalRecordNumber()
+            : ""
         ));
         medicalRecordNumberCol.setCellValueFactory(param -> {
             PatientRecord record = param.getValue();
@@ -120,13 +152,13 @@ public class DataInteractionController {
         });
         admissionDateCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getAdmissionDate() != null
-                ? format.format(param.getValue().getAdmissionDate())
-                : ""
+            ? format.format(param.getValue().getAdmissionDate())
+            : ""
         ));
         dischargeDateCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getDischargeDate() != null
-                ? format.format(param.getValue().getDischargeDate())
-                : ""
+            ? format.format(param.getValue().getDischargeDate())
+            : ""
         ));
         patientNameCol.setCellValueFactory(param -> {
             String patientName = (param.getValue().getPatientName() != null) ? param.getValue().getPatientName() : "";
@@ -138,8 +170,8 @@ public class DataInteractionController {
         });
         birthDateCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getBirthDate() != null
-                ? format.format(param.getValue().getBirthDate())
-                : ""
+            ? format.format(param.getValue().getBirthDate())
+            : ""
         ));
         ageCol.setCellValueFactory(param -> {
             Integer age = param.getValue().getAge();
@@ -177,24 +209,6 @@ public class DataInteractionController {
             : ""
         ));
 
-        // 初始化病案列表
-        initRecordsTable();
-    }
-
-    private void initRecordsTable() {
-        GetRecordsReq getRecordsReq = new GetRecordsReq();
-        getRecordsReq.setPageNum(0);
-        getRecordsReq.setPageSize(50);
-        String jsonInputString; // 将对象转换为JSON字符串
-        try {
-            jsonInputString = JsonUtil.toJson(getRecordsReq);
-            String response = HttpUtil.sendPostRequest(APIs.GET_RECORDS, jsonInputString, TokenStore.getToken());
-            GetRecordsRes res = JsonUtil.fromJson(response, GetRecordsRes.class);
-//            System.out.println(JsonUtil.toJson(res));
-            tableView.getItems().addAll(res.getRows());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @FXML
@@ -205,6 +219,11 @@ public class DataInteractionController {
             BorderPane pane = loader.load();
             DataInteractionImportController controller = loader.getController();
             controller.setStage(importStage);
+            controller.setRefreshDataCallback(unused -> {
+                //导入后刷新表格
+                tablePageController.goToTheHomepage();
+                return null;
+            });
             Scene scene = new Scene(pane);
             importStage.setResizable(false);
             importStage.setScene(scene);

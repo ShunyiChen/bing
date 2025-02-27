@@ -1,10 +1,13 @@
 package com.simeon.bing.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
+@Builder
 public class GetRecordsReq {
     /** 机构代码 */
     private String institutionCode;
@@ -38,9 +41,23 @@ public class GetRecordsReq {
     private String updateBy;
     /** 更新时间 */
     private Date updateTime;
-
     /** pageNum(非字段) 页数 */
     private Integer pageNum;
     /** pageSize(非字段) 每页数量 */
     private Integer pageSize;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date admissionDateFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date admissionDateTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dischargeDateFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date dischargeDateTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthDateFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date birthDateTo;
 }

@@ -54,4 +54,7 @@
          </content>
       </ScrollPane>
    </center>
+   <bottom>
+      <BorderPane fx:id="pageFooter" prefHeight="29.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
+   </bottom>
 </BorderPane>

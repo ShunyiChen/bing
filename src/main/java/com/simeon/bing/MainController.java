@@ -37,41 +37,26 @@ public class MainController {
     protected TreeView<String> routerTree;
     @FXML
     protected SplitPane splitPane;
-
-//    @FXML
-//    protected Button btnParamSettings;
-//    @FXML
-//    protected Button btnDataInteraction;
-//    @FXML
-//    protected Button btnCaseMgt;
-//    @FXML
-//    protected Button btnDigital;
+    @FXML
+    protected BorderPane leftPane;
+    @FXML
+    protected ToggleButton btnProject;
     @FXML
     protected Label systemTitleLabel;
-
-    private Stage paramSettingsStage = new Stage(StageStyle.UNDECORATED);
-    private MainApplication mainApp;
-    public static HashMap<String, String> SETTINGS = new HashMap<>();
-//    @FXML
-//    private HBox userProfilePane;
-//    @FXML
-//    private FlowPane buttonPane;
-//    @FXML
-//    private HBox returnPane;
-//    @FXML
-//    private BorderPane contentBorderPane;
-    private TabPane paramSettingsPane;
-    private TabPane diPane;
-    private BorderPane dpPane;
-//    @FXML
-//    private Label loginUserLabel;
-//    @FXML
-//    private Button btnReture;
     @FXML
     private Label taskStateLabel;
+    private Stage paramSettingsStage = new Stage(StageStyle.UNDECORATED);
+    private MainApplication mainApp;
     private ContextMenu menu = new ContextMenu();
     private DIController diController;
     private DPController dpController;
+
+    @FXML
+    protected void handleShowOrHideProject() {
+        leftPane.setVisible(!leftPane.isVisible());
+        // 可选：重新设置分隔符的位置
+        splitPane.setDividerPositions(leftPane.isVisible()?0.1:0);
+    }
 
 //    关于
     private Stage aboutStage = new Stage();
@@ -79,15 +64,13 @@ public class MainController {
     public void initialize(MainApplication mainApp) {
         RefUtils.labelState = taskStateLabel;
 
-        FontIcon icon = new FontIcon("mdral-account_circle");
-        icon.setIconSize(40);
-        icon.setFill(Color.WHITE);
-//        loginUserLabel.setText("");
-//        loginUserLabel.setGraphic(icon);
+        FontIcon icon = new FontIcon("mdoal-folder");
+        icon.setIconSize(20);
+        icon.setFill(Color.rgb(0,150,201));
+        btnProject.setGraphic(icon);
+        btnProject.setPadding(new Insets(0)); // 设置内边距为0
 
         this.mainApp = mainApp;
-
-
         initMenuTree();
 //        initSystemTitle();
 //        initButtons();
@@ -207,34 +190,34 @@ public class MainController {
     }
 
     private void initParamSettingsPane() {
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("param-settings.fxml"));
-        ParamSettingsController controller;
-        try {
-            paramSettingsPane = loader.load();
-            controller = loader.getController();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("param-settings.fxml"));
+//        ParamSettingsController controller;
+//        try {
+//            paramSettingsPane = loader.load();
+//            controller = loader.getController();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private void initDataInterchangePane() {
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("di-view.fxml"));
-        try {
-            diPane = loader.load();
-            diController = loader.getController();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("di-view.fxml"));
+//        try {
+//            diPane = loader.load();
+//            diController = loader.getController();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private void initDigitalProcessingPane() {
-        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("dp-view.fxml"));
-        try {
-            dpPane = loader.load();
-            dpController = loader.getController();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("dp-view.fxml"));
+//        try {
+//            dpPane = loader.load();
+//            dpController = loader.getController();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private void initAboutStage() {
