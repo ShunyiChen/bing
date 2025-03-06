@@ -253,6 +253,9 @@ public class DigitalProcessController {
         }
     }
 
+    /**
+     * 选择病案分类下拉框
+     */
     @FXML
     protected void handleChangeClassification() {
         if(StringUtils.isEmpty(patientInfoTxt.getText())) {
@@ -264,11 +267,11 @@ public class DigitalProcessController {
             alert.show();
             return;
         }
+        // 清空当前显示的材料图片
+        bigImageView.setImage(null);
+
         //关闭Camera
         handleCloseCamera();
-
-        // 清空当前显示的材料
-        bigImageView.setImage(null);
 
         // 选择病案分类
         SysDictType d = caseClassificationTxt.getSelectionModel().getSelectedItem();

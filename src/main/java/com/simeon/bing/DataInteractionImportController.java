@@ -63,7 +63,8 @@ public class DataInteractionImportController {
     protected TableColumn<PatientRecord, Integer> ageCol;
     @FXML
     protected TableColumn<PatientRecord, Integer> dischargeMethodCol;
-
+    @FXML
+    protected TableColumn<PatientRecord, String> statusCol;
     @FXML
     private void initialize() {
         // 初始化表格列
@@ -128,6 +129,11 @@ public class DataInteractionImportController {
             // 如果 hospitalizationCount 为 null，使用 0 作为默认值
             return new SimpleIntegerProperty(dischargeMethod != null ? dischargeMethod : 0).asObject();
         });
+        statusCol.setCellValueFactory(param -> new SimpleStringProperty(
+            param.getValue().getStatus() != null
+                    ? param.getValue().getStatus()
+                    : ""
+        ));
     }
 
     @FXML

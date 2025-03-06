@@ -184,7 +184,15 @@ public class MainController {
                             throw new RuntimeException(e);
                         }
                     } else if("上传病案".equals(selectedItem.getValue())) {
-                        mainContainer.setCenter(new BorderPane());
+                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("upload-records-view.fxml"));
+                        try {
+                            BorderPane pane = loader.load();
+                            UploadRecordsController controller = loader.getController();
+                            controller.setStage(stage);
+                            mainContainer.setCenter(pane);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else if("参数设置".equals(selectedItem.getValue())) {
                         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("param-settings-view.fxml"));
                         try {

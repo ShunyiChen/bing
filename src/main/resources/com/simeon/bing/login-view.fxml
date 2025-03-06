@@ -40,7 +40,7 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="userName" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="admin" />
+                  <TextField fx:id="userName" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="scanmanager" />
                </children>
                <VBox.margin>
                   <Insets top="30.0" />
@@ -56,7 +56,7 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="Admin123" />
+                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="scanmanager" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />

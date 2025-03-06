@@ -61,6 +61,7 @@
                         <TableColumn fx:id="birthDateCol" prefWidth="75.0" text="出生日期" />
                         <TableColumn fx:id="ageCol" prefWidth="75.0" text="年龄" />
                         <TableColumn fx:id="dischargeMethodCol" prefWidth="75.0" text="离院方式" />
+                        <TableColumn fx:id="statusCol" prefWidth="75.0" text="病案状态" />
                     </columns>
                   </TableView>
                </content>

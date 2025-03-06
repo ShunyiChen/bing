@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -11,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.DataInteractionSearchController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.DataInteractionSearchController">
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -21,14 +22,18 @@
                   <TextField fx:id="institutionCodeTxt" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="机构名称" />
                   <TextField fx:id="institutionNameTxt" layoutX="58.0" layoutY="49.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="病案号" />
+                  <TextField fx:id="medicalRecordNumberTxt" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="病案号" />
-                  <TextField fx:id="medicalRecordNumberTxt" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="住院次数" />
                   <TextField fx:id="hospitalizationCountTxt" layoutX="58.0" layoutY="49.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="姓名" />
+                  <TextField fx:id="patientNameTxt" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="性别" />
+                  <ComboBox fx:id="genderTxt" prefWidth="160.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="38.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
@@ -37,6 +42,8 @@
                   <DatePicker fx:id="admissionDateFromTxt" prefHeight="23.0" prefWidth="160.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="到" />
                   <DatePicker fx:id="admissionDateToTxt" prefHeight="23.0" prefWidth="160.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="年龄" />
+                  <TextField fx:id="ageTxt" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="66.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
@@ -45,41 +52,70 @@
                   <DatePicker fx:id="dischargeDateFromTxt" prefHeight="23.0" prefWidth="160.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="到" />
                   <DatePicker fx:id="dischargeDateToTxt" prefHeight="23.0" prefWidth="160.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="离院方式" />
+                  <ComboBox fx:id="dischargeMethodTxt" prefWidth="160.0" />
                </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="38.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
-               <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="姓名" />
-                  <TextField fx:id="patientNameTxt" />
-                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="性别" />
-                  <ComboBox fx:id="genderTxt" prefWidth="160.0" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
                <children>
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="出生日期" />
                   <DatePicker fx:id="birthDateFromTxt" prefHeight="23.0" prefWidth="160.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="到" />
                   <DatePicker fx:id="birthDateToTxt" prefHeight="23.0" prefWidth="160.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="病案状态" />
+                  <ComboBox fx:id="statusComboBox" prefWidth="160.0" />
                </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="122.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="94.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
                <children>
-                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="年龄" />
-                  <TextField fx:id="ageTxt" />
-                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="离院方式" />
-                  <ComboBox fx:id="dischargeMethodTxt" prefWidth="160.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="创建日期" />
+                  <DatePicker fx:id="createdDateFromTxt" prefHeight="23.0" prefWidth="160.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="到" />
+                  <DatePicker fx:id="createdDateToTxt" layoutX="75.0" layoutY="13.0" prefHeight="23.0" prefWidth="160.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="150.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="修改日期" />
+                  <DatePicker fx:id="createdDateFromTxt1" prefHeight="23.0" prefWidth="160.0" />
+                  <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="到" />
+                  <DatePicker fx:id="createdDateToTxt1" layoutX="75.0" layoutY="13.0" prefHeight="23.0" prefWidth="160.0" />
                   <RadioButton fx:id="btnWM" mnemonicParsing="false" text="西医">
                      <toggleGroup>
                         <ToggleGroup fx:id="type" />
                      </toggleGroup>
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
                   </RadioButton>
-                  <RadioButton fx:id="btnTCM" layoutX="455.0" layoutY="15.0" mnemonicParsing="false" text="中医" toggleGroup="$type" />
-                  <Button mnemonicParsing="false" onAction="#handleSearch" text="搜 索" />
-                  <Button layoutX="471.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleReset" text="重 置" />
+                  <RadioButton fx:id="btnTCM" mnemonicParsing="false" text="中医" toggleGroup="$type">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </RadioButton>
+                  <Button mnemonicParsing="false" onAction="#handleSearch" text="搜 索">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleReset" text="重 置" />
                </children>
             </HBox>
          </children>
       </VBox>
    </center>
+   <bottom>
+      <BorderPane BorderPane.alignment="CENTER">
+         <right>
+            <Button mnemonicParsing="false" text="折叠" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets right="5.0" />
+               </BorderPane.margin>
+            </Button>
+         </right>
+         <BorderPane.margin>
+            <Insets top="-5.0" />
+         </BorderPane.margin>
+      </BorderPane>
+   </bottom>
 </BorderPane>
