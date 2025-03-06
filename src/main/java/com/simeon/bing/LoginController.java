@@ -116,8 +116,8 @@ public class LoginController {
         try {
             Map<String, String> parameters = YamlUtils.loadFromYaml(yamlPath, HashMap.class);
             Settings.LOCAL_STORAGE_PATH = parameters.get(Settings.LOCAL_STORAGE_PATH_KEY);
+            Settings.REMOTE_STORAGE_PATH = parameters.get(Settings.REMOTE_STORAGE_PATH_KEY);
             Settings.CAPTURE_PLUGIN = parameters.get(Settings.CAPTURE_PLUGIN_KEY);
-            System.out.println(Settings.LOCAL_STORAGE_PATH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

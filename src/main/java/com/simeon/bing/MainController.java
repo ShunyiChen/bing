@@ -186,10 +186,10 @@ public class MainController {
                     } else if("上传病案".equals(selectedItem.getValue())) {
                         mainContainer.setCenter(new BorderPane());
                     } else if("参数设置".equals(selectedItem.getValue())) {
-                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("system-parameters-view.fxml"));
+                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("param-settings-view.fxml"));
                         try {
                             BorderPane pane = loader.load();
-                            SystemParametersController controller = loader.getController();
+                            ParamSettingsController controller = loader.getController();
                             mainContainer.setCenter(pane);
                         } catch (IOException e) {
                             throw new RuntimeException(e);

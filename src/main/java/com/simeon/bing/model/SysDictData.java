@@ -32,8 +32,12 @@ public class SysDictData extends BaseEntity {
 
     /** 是否为文件节点 */
     private boolean file;
-    /** 文件路径 */
+    /** 文件相对路径 */
     private String filePath;
+    /** 文件记录状态 Uploaded/Waiting Upload/Upload Failed */
+    private String fileStatus;
+    /** 文件记录主键ID */
+    private Long fileId;
 
     public SysDictData() {}
 

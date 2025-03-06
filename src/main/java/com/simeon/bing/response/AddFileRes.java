@@ -6,5 +6,5 @@ import lombok.Setter;
 @Setter
 @Getter
 public class AddFileRes extends Response {
-    private int id;
+    private Long id;
 }

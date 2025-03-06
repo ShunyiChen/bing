@@ -15,6 +15,7 @@ import com.simeon.bing.utils.enums.PatientRecordState;
 import com.teamdev.jxbrowser.browser.Browser;
 import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.engine.EngineOptions;
+import com.teamdev.jxbrowser.frame.Frame;
 import com.teamdev.jxbrowser.js.JsObject;
 import com.teamdev.jxbrowser.js.internal.JsMapImpl;
 import com.teamdev.jxbrowser.js.internal.JsObjectImpl;
@@ -38,10 +39,7 @@ import org.kordamp.ikonli.javafx.FontIcon;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -106,8 +104,8 @@ public class DigitalProcessController {
                         bigImageView.setImage(image);
 
                         // 获取图片的宽度和高度
-                        double width = image.getWidth();
-                        double height = image.getHeight();
+                        int width = (int) image.getWidth();
+                        int height = (int) image.getHeight();
 
                         labelPX.setText("图片分辨率: " + width + "x" + height);
 
@@ -269,6 +267,10 @@ public class DigitalProcessController {
         //关闭Camera
         handleCloseCamera();
 
+        // 清空当前显示的材料
+        bigImageView.setImage(null);
+
+        // 选择病案分类
         SysDictType d = caseClassificationTxt.getSelectionModel().getSelectedItem();
         if(d != null) {
             Map<String, String> queryParams = new HashMap<>();
@@ -277,15 +279,15 @@ public class DigitalProcessController {
             queryParams.put("dictType", d.getDictType());
             String response;
             try {
+                // 取已上传的文件列表
                 BingFiles bingFiles = new BingFiles();
                 bingFiles.setRecordId(res.getData().getId());
                 bingFiles.setClassificationName(d.getDictType());
-
                 String jsonInputString = JsonUtil.toJson(bingFiles);
                 String json = HttpUtil.sendPostRequest(APIs.GET_FILES, jsonInputString, TokenStore.getToken());
                 List<BingFiles> list = JsonUtil.fromJsonToList(json, BingFiles.class);
-                System.out.println("size = "+list.size());
 
+                // 取材料分类列表
                 response = HttpUtil.sendGetRequest(APIs.GET_DICT_DATA, queryParams, TokenStore.getToken());
                 GetDictDataRes res = JsonUtil.fromJson(response, GetDictDataRes.class);
                 rootNode.getChildren().clear();
@@ -294,12 +296,18 @@ public class DigitalProcessController {
                     item.setValue(data);
                     rootNode.getChildren().add(item);
 
+                    // 加载文件列表
                     List<BingFiles> filteredList =  list.stream().filter(e -> e.getClassificationName().equals(data.getDictLabel())).toList();
                     for(BingFiles f : filteredList) {
                         TreeItem<SysDictData> t = new TreeItem<>();
                         SysDictData page = new SysDictData();
+                        page.setFileId(f.getId());
                         page.setFile(true);
-                        page.setFilePath(f.getFilePath());
+                        if(f.getStatus().equals(FileState.UPLOADED.getState())) {
+                            page.setFilePath(Settings.REMOTE_STORAGE_PATH + f.getFilePath());
+                        } else {
+                            page.setFilePath(Settings.LOCAL_STORAGE_PATH + f.getFilePath());
+                        }
                         page.setDictLabel(f.getFileName());
                         t.setValue(page);
                         item.getChildren().add(t);
@@ -382,59 +390,103 @@ public class DigitalProcessController {
             alert.setHeaderText("请选择材料分类");
             alert.setContentText("");
             alert.show();
-            return;
         }
         else if(item.getValue().isFile()) {
-            item = item.getParent();
-        }
-        TreeItem<SysDictData> finalItem = item;
-        jxbrowser.mainFrame().ifPresent(frame -> {
+            // 更新操作
+            // 显示确认对话框
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("提示");
+            alert.initOwner(stage);
+            alert.setHeaderText("您确定要覆盖原有文件吗？");
+            alert.setContentText("");
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                // 更新处理
+                TreeItem<SysDictData> finalItem = item;
+                // 清空原有材料文件
+                bigImageView.setImage(null);
+                File f = new File(finalItem.getValue().getFilePath());
+                if(f.exists()) {
+                    f.delete();
+                }
 
-            TreeItem<SysDictData> subItem = new TreeItem<>();
-            SysDictData newTreeNode = new SysDictData();
-            String classificationName = finalItem.getValue().getDictLabel();
-            File dir = new File(Settings.LOCAL_STORAGE_PATH +File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName);
-            if(!dir.exists()) {
-                dir.mkdirs();
-            }
-            int num = finalItem.getChildren().size();
-            String fileName = "第"+(num + 1)+"页";
-            String filePath = dir.getPath() + File.separator+fileName+".jpg";
-
-            newTreeNode.setDictLabel(fileName);
-            newTreeNode.setFilePath(filePath);
-            newTreeNode.setFile(true);
-            subItem.setValue(newTreeNode);
-            finalItem.getChildren().add(subItem);
-            finalItem.setExpanded(true);
-
-            insertNewFile(res.getData().getId(), classificationName, fileName, filePath, FileState.WAITING_UPLOAD.getState());
-            updatePatientRecord(res.getData());
-
-            String newFilePath = filePath.replace("\\", "/");
-            frame.executeJavaScript("SET_PHOTO_PATH('"+newFilePath+"');");
-            frame.executeJavaScript("CZUR_ID_GrabImage();", new Consumer<>() {
-
-                @Override
-                public void accept(Object o) {
-                    try {
-                        displayPicture(filePath);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                jxbrowser.mainFrame().ifPresent(frame -> {
+                    String classificationName = finalItem.getValue().getDictLabel();
+                    File dir = new File(Settings.LOCAL_STORAGE_PATH +File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName);
+                    if(!dir.exists()) {
+                        dir.mkdirs();
                     }
+                    finalItem.getValue().setFileStatus(FileState.WAITING_UPLOAD.getState());
+
+                    updateNewFile(finalItem.getValue().getFileId());
+                    updatePatientRecord(res.getData());
+
+                    execute(finalItem.getValue().getFilePath(), frame);
+                });
+            }
+        } else {
+            // 新增处理
+            TreeItem<SysDictData> finalItem = item;
+            jxbrowser.mainFrame().ifPresent(frame -> {
+                TreeItem<SysDictData> subItem = new TreeItem<>();
+                SysDictData newTreeNode = new SysDictData();
+                String classificationName = finalItem.getValue().getDictLabel();
+                File dir = new File(Settings.LOCAL_STORAGE_PATH +File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName);
+                if(!dir.exists()) {
+                    dir.mkdirs();
+                }
+                int num = finalItem.getChildren().size();
+                String fileName = "第"+(num + 1)+"页";
+                String filePath = dir.getPath() + File.separator+fileName+".jpg";
+
+                newTreeNode.setDictLabel(fileName);
+                newTreeNode.setFilePath(filePath);
+                newTreeNode.setFile(true);
+
+                subItem.setValue(newTreeNode);
+                finalItem.getChildren().add(subItem);
+                finalItem.setExpanded(true);
+
+                SysDictType type = caseClassificationTxt.getSelectionModel().getSelectedItem();
+                if(type != null) {
+                    // 获取病案分类
+                    String recordClassificationName = type.getDictType();
+                    String relativePath = File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName+ File.separator+fileName+".jpg";
+                    long id = insertNewFile(res.getData().getId(), recordClassificationName, classificationName, fileName, relativePath, FileState.WAITING_UPLOAD.getState());
+                    newTreeNode.setFileId(id);
+                    updatePatientRecord(res.getData());
+
+                    execute(filePath, frame);
                 }
 
-                @Override
-                public Consumer<Object> andThen(Consumer<? super Object> after) {
-                    return Consumer.super.andThen(after);
-                }
             });
+        }
+    }
+
+    private void execute(String filePath, Frame frame) {
+        String newFilePath = filePath.replace("\\", "/");
+        frame.executeJavaScript("SET_PHOTO_PATH('"+newFilePath+"');");
+        frame.executeJavaScript("CZUR_ID_GrabImage();", new Consumer<>() {
+            @Override
+            public void accept(Object o) {
+                try {
+                    displayPicture(filePath);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public Consumer<Object> andThen(Consumer<? super Object> after) {
+                return Consumer.super.andThen(after);
+            }
         });
     }
 
-    private void insertNewFile(long recordId, String classificationName, String fileName, String filePath, String status) {
+    private Long insertNewFile(long recordId, String recordClassificationName, String classificationName, String fileName, String filePath, String status) {
         BingFiles file = new BingFiles();
         file.setRecordId(recordId);
+        file.setRecordClassificationName(recordClassificationName);
         file.setClassificationName(classificationName);
         file.setFileName(fileName);
         file.setFilePath(filePath);
@@ -446,11 +498,37 @@ public class DigitalProcessController {
             jsonInputString = JsonUtil.toJson(file);
             String response = HttpUtil.sendPostRequest(APIs.ADD_FILE, jsonInputString, TokenStore.getToken());
             AddFileRes res = JsonUtil.fromJson(response, AddFileRes.class);
-            if(res.getCode() == 500) {
+            if(res.getCode() == 200) {
+                return res.getId();
+            } else {
                 Alert alert = new Alert (Alert.AlertType.ERROR);
                 alert.initOwner(stage);
                 alert.setTitle("提示");
                 alert.setHeaderText("插入材料失败");
+                alert.setContentText("");
+                alert.show();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return 0L;
+    }
+
+    private void updateNewFile(Long fileId) {
+        BingFiles bf = new BingFiles();
+        bf.setId(fileId);
+        bf.setStatus(FileState.WAITING_UPLOAD.getState());
+        bf.setUpdateBy(UserInfoStore.getUserName());
+        String jsonInputString = "";
+        try {
+            jsonInputString = JsonUtil.toJson(bf);
+            String response = HttpUtil.sendPostRequest(APIs.UPDATE_FILE, jsonInputString, TokenStore.getToken());
+            Response res = JsonUtil.fromJson(response, Response.class);
+            if(res.getCode() == 500) {
+                Alert alert = new Alert (Alert.AlertType.ERROR);
+                alert.initOwner(stage);
+                alert.setTitle("提示");
+                alert.setHeaderText("更新材料状态失败");
                 alert.setContentText("");
                 alert.show();
             }

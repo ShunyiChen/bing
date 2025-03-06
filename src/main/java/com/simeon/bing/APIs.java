@@ -11,6 +11,7 @@ public class APIs {
     public static String GET_RECORD = BASE_URL + "/bing/record/";
     public static String GET_DICT_DATA = BASE_URL + "/system/dict/data/list";
     public static String ADD_FILE = BASE_URL + "/bing/files";
+    public static String UPDATE_FILE = BASE_URL + "/bing/files/update";
     public static String GET_USER_INFO = BASE_URL + "/system/user/getInfo";
     public static String GET_FILES = BASE_URL + "/bing/files/findFiles";
 }

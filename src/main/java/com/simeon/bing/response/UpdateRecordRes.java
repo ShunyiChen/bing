@@ -6,5 +6,4 @@ import lombok.Setter;
 @Setter
 @Getter
 public class UpdateRecordRes extends Response {
-
 }
