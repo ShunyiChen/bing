@@ -3,6 +3,8 @@ package com.simeon.bing.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
+
 public class JsonUtil {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
@@ -33,5 +35,17 @@ public class JsonUtil {
      */
     public static <T> T fromJson(String json, Class<T> clazz) throws Exception {
         return objectMapper.readValue(json, clazz);
+    }
+
+    /**
+     * 将JSON字符串转换为Java List对象
+     *
+     * @param json JSON字符串
+     * @param clazz List中元素的类型
+     * @return Java List对象
+     * @throws Exception 如果转换失败
+     */
+    public static <T> List<T> fromJsonToList(String json, Class<T> clazz) throws Exception {
+        return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(List.class, clazz));
     }
 }

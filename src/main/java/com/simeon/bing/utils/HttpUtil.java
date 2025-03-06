@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class HttpUtil {
 
@@ -19,6 +21,51 @@ public class HttpUtil {
      */
     public static String sendGetRequest(String urlString, String accessToken) throws Exception {
         URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Accept", "application/json");
+        connection.setRequestProperty("Authorization", "Bearer " + accessToken); // 添加Authorization头
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                return response.toString();
+            }
+        } else {
+            throw new RuntimeException("HTTP GET request failed with error code: " + responseCode);
+        }
+    }
+
+    /**
+     * 发送GET请求携带表单参数
+     *
+     * @param baseUrl
+     * @param queryParams
+     * @param accessToken
+     * @return
+     * @throws Exception
+     */
+    public static String sendGetRequest(String baseUrl, Map<String, String> queryParams, String accessToken) throws Exception {
+        // 构建带有查询参数的URL
+        StringBuilder urlWithParams = new StringBuilder(baseUrl);
+        if (queryParams != null && !queryParams.isEmpty()) {
+            urlWithParams.append("?");
+            for (Map.Entry<String, String> entry : queryParams.entrySet()) {
+                String encodedKey = URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8);
+                String encodedValue = URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8);
+                urlWithParams.append(encodedKey).append("=").append(encodedValue).append("&");
+            }
+            // 去掉最后一个多余的"&"
+            urlWithParams.setLength(urlWithParams.length() - 1);
+        }
+
+        URL url = new URL(urlWithParams.toString());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Accept", "application/json");

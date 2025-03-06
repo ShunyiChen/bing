@@ -32,13 +32,19 @@ import java.util.HashMap;
 public class MainController {
     private Stage stage;
     @FXML
+    protected BorderPane topLayerPane;
+    @FXML
+    protected BorderPane borderBar;
+    @FXML
+    protected BorderPane sideBar;
+    @FXML
     protected BorderPane mainContainer;
     @FXML
     protected TreeView<String> routerTree;
-    @FXML
-    protected SplitPane splitPane;
-    @FXML
-    protected BorderPane leftPane;
+//    @FXML
+//    protected SplitPane splitPane;
+//    @FXML
+//    protected BorderPane leftPane;
     @FXML
     protected ToggleButton btnProject;
     @FXML
@@ -53,9 +59,8 @@ public class MainController {
 
     @FXML
     protected void handleShowOrHideProject() {
-        leftPane.setVisible(!leftPane.isVisible());
-        // 可选：重新设置分隔符的位置
-        splitPane.setDividerPositions(leftPane.isVisible()?0.1:0);
+        sideBar.setVisible(!sideBar.isVisible());
+        topLayerPane.setMouseTransparent(!sideBar.isVisible());
     }
 
 //    关于
@@ -63,6 +68,9 @@ public class MainController {
 
     public void initialize(MainApplication mainApp) {
         RefUtils.labelState = taskStateLabel;
+
+        // 设置上层 BorderPane 为不可点击
+        topLayerPane.setMouseTransparent(false);
 
         FontIcon icon = new FontIcon("mdoal-folder");
         icon.setIconSize(20);
@@ -72,6 +80,11 @@ public class MainController {
 
         this.mainApp = mainApp;
         initMenuTree();
+
+
+        // 监听全局鼠标点击事件
+        mainContainer.getScene().addEventFilter(MouseEvent.MOUSE_CLICKED, this::handleGlobalMouseClick);
+
 //        initSystemTitle();
 //        initButtons();
 //        initParamSettingsPane();
@@ -80,6 +93,43 @@ public class MainController {
 //        initReturnPane();
 //        initUserProfileMenu();
 //        initAboutStage();
+    }
+
+    /**
+     * 处理全局鼠标点击事件
+     */
+    private void handleGlobalMouseClick(MouseEvent event) {
+        // 判断点击事件是否发生在 sideBar 或其子节点中
+        if (!isClickInsideNode(event, sideBar, borderBar)) {
+            // 如果点击事件发生在 sideBar 外，则隐藏 sideBar
+            sideBar.setVisible(false);
+            topLayerPane.setMouseTransparent(true); // 允许点击底层面板
+        }
+    }
+
+    /**
+     * 判断鼠标点击事件是否发生在指定节点或其子节点中
+     *
+     * @param event 鼠标点击事件
+     * @param node  要检查的节点
+     * @return 如果点击事件发生在节点或其子节点中，返回 true；否则返回 false
+     */
+    private boolean isClickInsideNode(MouseEvent event, javafx.scene.Node node, javafx.scene.Node node2) {
+        if(event.getTarget() instanceof javafx.scene.Scene) {
+            return true;
+        }
+        // 获取点击事件的目标节点
+        javafx.scene.Node target = (javafx.scene.Node) event.getTarget();
+
+        // 递归检查目标节点是否为指定节点或其子节点
+        while (target != null) {
+            if (target == node || target == node2) {
+                return true;
+            }
+            target = target.getParent();
+        }
+
+        return false;
     }
 
     private void loadRouters(TreeItem<String> parentItem, GetRoutersResponse.D[] data) {
@@ -106,7 +156,6 @@ public class MainController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         routerTree.setRoot(rootNode);
         // 为TreeView设置鼠标点击事件
         routerTree.setOnMouseClicked(event -> {
@@ -125,7 +174,15 @@ public class MainController {
                             throw new RuntimeException(e);
                         }
                     } else if("数字化加工(高拍)".equals(selectedItem.getValue())) {
-                        mainContainer.setCenter(new BorderPane());
+                        FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("digital-processing-view.fxml"));
+                        try {
+                            BorderPane pane = loader.load();
+                            DigitalProcessController controller = loader.getController();
+                            controller.setStage(stage);
+                            mainContainer.setCenter(pane);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     } else if("上传病案".equals(selectedItem.getValue())) {
                         mainContainer.setCenter(new BorderPane());
                     } else if("参数设置".equals(selectedItem.getValue())) {

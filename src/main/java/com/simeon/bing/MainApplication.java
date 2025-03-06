@@ -14,6 +14,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -99,6 +100,9 @@ public class MainApplication extends Application {
         progressIndicator.setMaxSize(30, 30);
         card.setLeft(progressIndicator);
         Scene scene = new Scene(card, 1200, 800);
+//        KeyCodeCombination KCC = new KeyCodeCombination(KeyCode.);
+        scene.getStylesheets().add("com/simeon/bing/style.css"); // Load the CSS file
+
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMaximized(true);
@@ -118,17 +122,15 @@ public class MainApplication extends Application {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 // 用户选择了确定，关闭窗口
-                stage.close();
+//                stage.close();
                 try {
                     HttpUtil.sendPostRequest(APIs.LOGOUT, "{}", TokenStore.getToken());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                System.exit(0);
             }
-            // 如果用户选择了取消，什么也不做，窗口保持打开状态
         });
-
-
         stage.show();
     }
 

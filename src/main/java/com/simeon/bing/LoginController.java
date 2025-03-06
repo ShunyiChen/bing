@@ -1,15 +1,19 @@
 package com.simeon.bing;
 
 import com.simeon.bing.request.Login;
+import com.simeon.bing.response.GetUserInfoRes;
 import com.simeon.bing.response.LoginResponse;
 import com.simeon.bing.utils.AESUtils;
 import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
+import com.simeon.bing.utils.YamlUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class LoginController {
@@ -79,7 +83,16 @@ public class LoginController {
                     alert.show();
                     return;
                 }
+                // 保存token
                 TokenStore.saveToken(res.getData().getAccess_token());
+
+                response = HttpUtil.sendGetRequest(APIs.GET_USER_INFO, res.getData().getAccess_token());
+                GetUserInfoRes resp = JsonUtil.fromJson(response, GetUserInfoRes.class);
+                // 保存用户信息
+                UserInfoStore.setUserName(resp.getUser().getUserName());
+
+                loadLocalSettings();
+
                 app.unregisterEnterKey(app.stage.getScene());
                 //打开主界面
                 app.openMainWindow();
@@ -98,16 +111,16 @@ public class LoginController {
     /**
      * 创建配置文件
      */
-    private void saveYamlConfFile(Map<String, Object> data) {
-//        if(!Constants.YAML_CONF.exists()) {
-//            File home = new File("./preference");
-//            home.mkdir();
-//        }
-//        try {
-//            YamlUtil.write(data, Constants.YAML_CONF);
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+    private void loadLocalSettings() {
+        String yamlPath = System.getProperty("user.home") + "/" + "bing.yaml";
+        try {
+            Map<String, String> parameters = YamlUtils.loadFromYaml(yamlPath, HashMap.class);
+            Settings.LOCAL_STORAGE_PATH = parameters.get(Settings.LOCAL_STORAGE_PATH_KEY);
+            Settings.CAPTURE_PLUGIN = parameters.get(Settings.CAPTURE_PLUGIN_KEY);
+            System.out.println(Settings.LOCAL_STORAGE_PATH);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void initialize(MainApplication app) {

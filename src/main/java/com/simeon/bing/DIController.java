@@ -1,12 +1,6 @@
 package com.simeon.bing;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
 import com.simeon.bing.utils.UIUtils;
-import com.simeon.bing.utils.YmlUtils;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
@@ -15,13 +9,8 @@ import javafx.util.Callback;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 public class DIController {
 
@@ -266,22 +255,22 @@ public class DIController {
 
     @FXML
     protected void onOpenAction() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("打开文件");
-        String path = YmlUtils.get("csvFileDir");
-        if(StringUtils.isNotEmpty(path)) {
-            fileChooser.setInitialDirectory(new File(path));
-        } else {
-            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        }
-        FileChooser.ExtensionFilter pngExtensionFilter = new FileChooser.ExtensionFilter(".csv)", "*.csv");
-        fileChooser.getExtensionFilters().add(pngExtensionFilter);
-        fileChooser.setSelectedExtensionFilter(pngExtensionFilter);
-        csvFile = fileChooser.showOpenDialog(stage);
-        if(csvFile != null) {
-            YmlUtils.set("csvFileDir", csvFile.getParent());
-            loadCSVFile(csvFile);
-        }
+//        FileChooser fileChooser = new FileChooser();
+//        fileChooser.setTitle("打开文件");
+//        String path = YmlUtils.get("csvFileDir");
+//        if(StringUtils.isNotEmpty(path)) {
+//            fileChooser.setInitialDirectory(new File(path));
+//        } else {
+//            fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+//        }
+//        FileChooser.ExtensionFilter pngExtensionFilter = new FileChooser.ExtensionFilter(".csv)", "*.csv");
+//        fileChooser.getExtensionFilters().add(pngExtensionFilter);
+//        fileChooser.setSelectedExtensionFilter(pngExtensionFilter);
+//        csvFile = fileChooser.showOpenDialog(stage);
+//        if(csvFile != null) {
+//            YmlUtils.set("csvFileDir", csvFile.getParent());
+//            loadCSVFile(csvFile);
+//        }
     }
     
     private void loadCSVFile(File csvFile) {

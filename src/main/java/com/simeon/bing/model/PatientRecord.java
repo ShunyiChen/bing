@@ -35,4 +35,6 @@ public class PatientRecord extends BaseEntity {
     private Integer dischargeMethod;
     /** 病案类型 0-西医 1中医 */
     private Integer type;
+    /** 病案状态 New (新建)/Submitted (已提交)/Modified (有改动) */
+    private String status;
 }

@@ -1,0 +1,25 @@
+.split-pane {
+    -fx-background-color: #f0f0f0; /* Background color */
+    -fx-border-color: #cccccc; /* Border color */
+    -fx-border-width: 0px; /* Border width */
+}
+
+.split-pane > .split-pane-divider:vertical {
+    -fx-background-color: #666666; /* Vertical divider color */
+    -fx-background-insets: 0;
+    -fx-pref-width: 1px; /* Vertical divider width */
+}
+
+.split-pane > .split-pane-divider:horizontal {
+    -fx-background-color: #666666; /* Horizontal divider color */
+    -fx-background-insets: 0;
+    -fx-pref-height: 1px; /* Horizontal divider height */
+}
+
+.split-pane > .split-pane-divider:hover {
+    -fx-background-color: rgb(0,150,201); /* Divider color on hover */
+}
+
+.split-pane-divider {
+    -fx-padding: 1;                /* Add padding around the divider */
+}

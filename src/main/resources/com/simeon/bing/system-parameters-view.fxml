@@ -12,8 +12,8 @@
          <content>
             <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                <TableColumn fx:id="nameCol" prefWidth="213.0" text="本地参数" />
-                <TableColumn fx:id="valueCol" prefWidth="400.0" text="参数值" />
+                <TableColumn fx:id="nameColumn" editable="false" prefWidth="213.0" text="本地参数" />
+                <TableColumn fx:id="valueColumn" prefWidth="400.0" text="参数值" />
               </columns>
             </TableView>
          </content>
