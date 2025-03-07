@@ -1,6 +1,7 @@
 package com.simeon.bing;
 
 import com.simeon.bing.model.CallbackParam;
+import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.model.TablePage;
 import com.simeon.bing.request.GetRecordsReq;
 import com.simeon.bing.response.GetRecordsRes;

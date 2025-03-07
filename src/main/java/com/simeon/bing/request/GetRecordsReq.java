@@ -33,6 +33,8 @@ public class GetRecordsReq {
     private Integer dischargeMethod;
     /** 病案类型 0-西医 1中医 */
     private Integer type;
+    /** 病案状态 New (新建)/Submitted (已提交)/Modified (有改动) */
+    private String status;
     /** 创建者 */
     private String createBy;
     /** 创建时间 */
@@ -60,4 +62,14 @@ public class GetRecordsReq {
     private Date birthDateFrom;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date birthDateTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createTimeFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date createTimeTo;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updateTimeFrom;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date updateTimeTo;
 }

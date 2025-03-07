@@ -125,9 +125,9 @@ public class DigitalProcessController {
                 }
             }
         });
-        SysDictType d1 = new SysDictType(12L,"1.住院病案", "bing_admission case", "0");
-        SysDictType d2 = new SysDictType(18L,"2.门诊病案", "bing_outpatient_case", "0");
-        SysDictType d3 = new SysDictType(19L,"3.急诊病案", "bing_emergency case", "0");
+        SysDictType d1 = new SysDictType(12L,"1.住院病案", "1.住院病案", "0");
+        SysDictType d2 = new SysDictType(18L,"2.门诊病案", "2.门诊病案", "0");
+        SysDictType d3 = new SysDictType(19L,"3.急诊病案", "3.急诊病案", "0");
         caseClassificationTxt.getItems().addAll(d1, d2, d3);
 
         rootNode.setExpanded(true); // 展开根节点
@@ -285,7 +285,7 @@ public class DigitalProcessController {
                 // 取已上传的文件列表
                 BingFiles bingFiles = new BingFiles();
                 bingFiles.setRecordId(res.getData().getId());
-                bingFiles.setClassificationName(d.getDictType());
+                bingFiles.setRecordClassificationName(d.getDictType());
                 String jsonInputString = JsonUtil.toJson(bingFiles);
                 String json = HttpUtil.sendPostRequest(APIs.GET_FILES, jsonInputString, TokenStore.getToken());
                 List<BingFiles> list = JsonUtil.fromJsonToList(json, BingFiles.class);
@@ -396,7 +396,6 @@ public class DigitalProcessController {
         }
         else if(item.getValue().isFile()) {
             // 更新操作
-            // 显示确认对话框
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("提示");
             alert.initOwner(stage);
@@ -405,64 +404,85 @@ public class DigitalProcessController {
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
                 // 更新处理
-                TreeItem<SysDictData> finalItem = item;
-                // 清空原有材料文件
-                bigImageView.setImage(null);
-                File f = new File(finalItem.getValue().getFilePath());
-                if(f.exists()) {
-                    f.delete();
-                }
-
-                jxbrowser.mainFrame().ifPresent(frame -> {
-                    String classificationName = finalItem.getValue().getDictLabel();
-                    File dir = new File(Settings.LOCAL_STORAGE_PATH +File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName);
-                    if(!dir.exists()) {
-                        dir.mkdirs();
+                SysDictType dictType = caseClassificationTxt.getSelectionModel().getSelectedItem();
+                if(dictType != null) {
+                    TreeItem<SysDictData> finalItem = item;
+                    // 清空原有材料文件
+                    bigImageView.setImage(null);
+                    File f = new File(finalItem.getValue().getFilePath());
+                    if(f.exists()) {
+                        f.delete();
                     }
-                    finalItem.getValue().setFileStatus(FileState.WAITING_UPLOAD.getState());
+                    jxbrowser.mainFrame().ifPresent(frame -> {
+                        // 材料分类名称
+                        String classificationName = finalItem.getParent().getValue().getDictLabel();
+                        File dir = new File(Settings.LOCAL_STORAGE_PATH
+                                + File.separator
+                                + res.getData().getMedicalRecordNumber()
+                                + File.separator
+                                + dictType.getDictType()
+                                + File.separator
+                                + classificationName);
+                        if(!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        finalItem.getValue().setFileStatus(FileState.WAITING_UPLOAD.getState());
 
-                    updateNewFile(finalItem.getValue().getFileId());
-                    updatePatientRecord(res.getData());
+                        updateNewFile(finalItem.getValue().getFileId());
+                        updatePatientRecord(res.getData());
 
-                    execute(finalItem.getValue().getFilePath(), frame);
-                });
+                        execute(finalItem.getValue().getFilePath(), frame);
+                    });
+                }
             }
         } else {
             // 新增处理
-            TreeItem<SysDictData> finalItem = item;
-            jxbrowser.mainFrame().ifPresent(frame -> {
-                TreeItem<SysDictData> subItem = new TreeItem<>();
-                SysDictData newTreeNode = new SysDictData();
-                String classificationName = finalItem.getValue().getDictLabel();
-                File dir = new File(Settings.LOCAL_STORAGE_PATH +File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName);
-                if(!dir.exists()) {
-                    dir.mkdirs();
-                }
-                int num = finalItem.getChildren().size();
-                String fileName = "第"+(num + 1)+"页";
-                String filePath = dir.getPath() + File.separator+fileName+".jpg";
+            SysDictType dictType = caseClassificationTxt.getSelectionModel().getSelectedItem();
+            if(dictType != null) {
+                TreeItem<SysDictData> finalItem = item;
+                jxbrowser.mainFrame().ifPresent(frame -> {
+                    TreeItem<SysDictData> subItem = new TreeItem<>();
+                    SysDictData newTreeNode = new SysDictData();
+                    String classificationName = finalItem.getValue().getDictLabel();
+                    File dir = new File(Settings.LOCAL_STORAGE_PATH
+                        + File.separator
+                        + res.getData().getMedicalRecordNumber()
+                        + File.separator
+                        + dictType.getDictType()
+                        + File.separator
+                        + classificationName
+                    );
+                    if(!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    int num = finalItem.getChildren().size();
+                    String fileName = "第"+(num + 1)+"页";
+                    String filePath = dir.getPath() + File.separator+fileName+".jpg";
 
-                newTreeNode.setDictLabel(fileName);
-                newTreeNode.setFilePath(filePath);
-                newTreeNode.setFile(true);
+                    newTreeNode.setDictLabel(fileName);
+                    newTreeNode.setFilePath(filePath);
+                    newTreeNode.setFile(true);
 
-                subItem.setValue(newTreeNode);
-                finalItem.getChildren().add(subItem);
-                finalItem.setExpanded(true);
-
-                SysDictType type = caseClassificationTxt.getSelectionModel().getSelectedItem();
-                if(type != null) {
+                    subItem.setValue(newTreeNode);
+                    finalItem.getChildren().add(subItem);
+                    finalItem.setExpanded(true);
                     // 获取病案分类
-                    String recordClassificationName = type.getDictType();
-                    String relativePath = File.separator+ res.getData().getMedicalRecordNumber() +File.separator+ classificationName+ File.separator+fileName+".jpg";
+                    String recordClassificationName = dictType.getDictType();
+                    String relativePath = File.separator
+                            + res.getData().getMedicalRecordNumber()
+                            + File.separator
+                            + dictType.getDictType()
+                            + File.separator
+                            + classificationName
+                            + File.separator
+                            + fileName+".jpg";
                     long id = insertNewFile(res.getData().getId(), recordClassificationName, classificationName, fileName, relativePath, FileState.WAITING_UPLOAD.getState());
                     newTreeNode.setFileId(id);
                     updatePatientRecord(res.getData());
 
                     execute(filePath, frame);
-                }
-
-            });
+                });
+            }
         }
     }
 
@@ -502,7 +522,7 @@ public class DigitalProcessController {
             String response = HttpUtil.sendPostRequest(APIs.ADD_FILE, jsonInputString, TokenStore.getToken());
             AddFileRes res = JsonUtil.fromJson(response, AddFileRes.class);
             if(res.getCode() == 200) {
-                return res.getId();
+                return res.getData().getId();
             } else {
                 Alert alert = new Alert (Alert.AlertType.ERROR);
                 alert.initOwner(stage);

@@ -2,8 +2,13 @@ package com.simeon.bing.utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 
 import java.util.List;
+import java.util.TimeZone;
 
 public class JsonUtil {
 
@@ -12,6 +17,11 @@ public class JsonUtil {
     static {
         // 配置 ObjectMapper 忽略未知属性
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // 配置日期格式
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.setDateFormat(new StdDateFormat().withColonInTimeZone(true));
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai")); // 设置时区
     }
 
     /**

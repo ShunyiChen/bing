@@ -12,7 +12,7 @@
    <top>
       <BorderPane prefHeight="31.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <bottom>
-            <HBox alignment="CENTER_LEFT" prefHeight="34.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
+            <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="600.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
                   <Button mnemonicParsing="false" onAction="#handleImport" text="病案导入">
                      <HBox.margin>
@@ -23,16 +23,27 @@
             </HBox>
          </bottom>
          <center>
-            <BorderPane fx:id="searchPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+            <BorderPane fx:id="searchPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <bottom>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button fx:id="btnCollapse" mnemonicParsing="false" onAction="#handleCollapse">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </bottom></BorderPane>
          </center>
       </BorderPane>
    </top>
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <TableView fx:id="tableView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="tableView" editable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                  <TableColumn fx:id="rowNumberCol" prefWidth="75.0" text="序号" />
+                  <TableColumn fx:id="rowNumberCol" editable="false" prefWidth="75.0" text="序号" />
                 <TableColumn fx:id="institutionCodeCol" prefWidth="75.0" text="机构代码" />
                 <TableColumn fx:id="institutionNameCol" prefWidth="75.0" text="机构名称" />
                   <TableColumn fx:id="medicalRecordNumberCol" prefWidth="75.0" text="病案号" />
@@ -45,6 +56,7 @@
                   <TableColumn fx:id="ageCol" prefWidth="75.0" text="年龄" />
                   <TableColumn fx:id="dischargeMethodCol" prefWidth="75.0" text="离院方式" />
                   <TableColumn fx:id="typeCol" prefWidth="75.0" text="病案类型" />
+                  <TableColumn fx:id="statusCol" prefWidth="75.0" text="病案状态" />
                   <TableColumn fx:id="createByCol" prefWidth="75.0" text="创建者" />
                   <TableColumn fx:id="createTimeCol" prefWidth="75.0" text="创建时间" />
                   <TableColumn fx:id="updateByCol" prefWidth="75.0" text="最近更新者" />

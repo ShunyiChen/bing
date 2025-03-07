@@ -115,6 +115,7 @@ public class MainApplication extends Application {
 
             // 显示确认对话框
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initOwner(stage);
             alert.setTitle("确认关闭");
             alert.setHeaderText("您确定要退出系统吗？");
             alert.setContentText("");

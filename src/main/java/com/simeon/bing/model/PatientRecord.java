@@ -1,6 +1,8 @@
 package com.simeon.bing.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +11,9 @@ import java.util.Date;
 @Setter
 @Getter
 public class PatientRecord extends BaseEntity {
+    /** 选择框 */
+    private final BooleanProperty selected = new SimpleBooleanProperty(false);
+    /** ID主键 */
     private Long id;
     /** 机构代码 */
     private String institutionCode;
@@ -37,4 +42,14 @@ public class PatientRecord extends BaseEntity {
     private Integer type;
     /** 病案状态 New (新建)/Submitted (已提交)/Modified (有改动) */
     private String status;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
+
+    public void setSelected(boolean selected) {
+        this.selected.set(selected);
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
+    }
 }

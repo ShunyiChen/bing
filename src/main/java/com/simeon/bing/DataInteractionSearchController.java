@@ -5,11 +5,13 @@ import com.simeon.bing.request.GetRecordsReq;
 import com.simeon.bing.response.GetRecordsRes;
 import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
+import com.simeon.bing.utils.enums.PatientRecordState;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +19,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.Date;
+
+import static javafx.scene.control.PopupControl.USE_COMPUTED_SIZE;
 
 @Getter
 @Setter
@@ -53,15 +58,31 @@ public class DataInteractionSearchController {
     @FXML
     protected ComboBox<Integer> dischargeMethodTxt;
     @FXML
+    protected ComboBox<String> statusComboBox;
+    @FXML
     protected RadioButton btnWM;
     @FXML
     protected RadioButton btnTCM;
+
+    @FXML
+    protected DatePicker createdDateFromTxt;
+    @FXML
+    protected DatePicker createdDateToTxt;
+    @FXML
+    protected DatePicker updateDateFromTxt;
+    @FXML
+    protected DatePicker updateDateToTxt;
+    @FXML
+    protected VBox searchFormPane;
 
     @FXML
     private void initialize() {
         genderTxt.getItems().addAll("男", "女");
         // 添加整数 1 到 5
         dischargeMethodTxt.getItems().addAll(1, 2, 3, 4, 5);
+
+        String[] items = {"New", "Submitted", "Modified"};
+        statusComboBox.getItems().addAll(items);
     }
 
     @FXML
@@ -81,8 +102,13 @@ public class DataInteractionSearchController {
         LocalDate birthDateTo = birthDateToTxt.getValue();
         String age = ageTxt.getText();
         Integer dischargeMethod = dischargeMethodTxt.getValue();
+        String status = statusComboBox.getValue();
         boolean isWMSelected = btnWM.isSelected();
         boolean isTCMSelected = btnTCM.isSelected();
+        LocalDate createTimeFrom = createdDateFromTxt.getValue();
+        LocalDate createTimeTo = createdDateToTxt.getValue();
+        LocalDate updateTimeFrom = updateDateFromTxt.getValue();
+        LocalDate updateTimeTo = updateDateToTxt.getValue();
 
         queryParam.setInstitutionCode(institutionCode);
         queryParam.setInstitutionName(institutionName);
@@ -111,8 +137,21 @@ public class DataInteractionSearchController {
         }
         queryParam.setAge(StringUtils.isNotEmpty(age)?Integer.parseInt(age):null);
         queryParam.setDischargeMethod(dischargeMethod);
+        queryParam.setStatus(status);
         if(isWMSelected || isTCMSelected) {
             queryParam.setType(isWMSelected?0:1);
+        }
+        if(createTimeFrom != null && createTimeTo != null) {
+            Date from = Date.from(createTimeFrom.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
+            queryParam.setCreateTimeFrom(from);
+            Date to = Date.from(createTimeTo.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
+            queryParam.setCreateTimeTo(to);
+        }
+        if(updateTimeFrom != null && updateTimeTo != null) {
+            Date from = Date.from(updateTimeFrom.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
+            queryParam.setUpdateTimeFrom(from);
+            Date to = Date.from(updateTimeTo.atStartOfDay().atZone(ZoneOffset.UTC).toInstant());
+            queryParam.setUpdateTimeTo(to);
         }
         String jsonInputString;
         try {
@@ -142,7 +181,32 @@ public class DataInteractionSearchController {
         birthDateToTxt.setValue(null);
         ageTxt.clear();
         dischargeMethodTxt.getSelectionModel().clearSelection();
+        statusComboBox.setValue(null);
         btnWM.setSelected(false);
         btnTCM.setSelected(false);
+        createdDateFromTxt.setValue(null);
+        createdDateToTxt.setValue(null);
+        updateDateFromTxt.setValue(null);
+        updateDateToTxt.setValue(null);
+
+        queryParam.setInstitutionCode(null);
+        queryParam.setInstitutionName(null);
+        queryParam.setMedicalRecordNumber(null);
+        queryParam.setHospitalizationCount(null);
+        queryParam.setAdmissionDateFrom(null);
+        queryParam.setAdmissionDateTo(null);
+        queryParam.setDischargeDateFrom(null);
+        queryParam.setDischargeDateTo(null);
+        queryParam.setPatientName(null);
+        queryParam.setGender(null);
+        queryParam.setBirthDateFrom(null);
+        queryParam.setBirthDateTo(null);
+        queryParam.setAge(null);
+        queryParam.setDischargeMethod(null);
+        queryParam.setType(null);
+        queryParam.setCreateTimeFrom(null);
+        queryParam.setCreateTimeTo(null);
+        queryParam.setUpdateTimeFrom(null);
+        queryParam.setUpdateTimeTo(null);
     }
 }

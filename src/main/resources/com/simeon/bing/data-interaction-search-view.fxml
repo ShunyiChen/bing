@@ -14,7 +14,7 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.DataInteractionSearchController">
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="searchFormPane" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
                <children>
@@ -77,9 +77,9 @@
             <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="150.0" prefHeight="28.0" prefWidth="600.0" spacing="5.0">
                <children>
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="修改日期" />
-                  <DatePicker fx:id="createdDateFromTxt1" prefHeight="23.0" prefWidth="160.0" />
+                  <DatePicker fx:id="updateDateFromTxt" prefHeight="23.0" prefWidth="160.0" />
                   <Label alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="60.0" text="到" />
-                  <DatePicker fx:id="createdDateToTxt1" layoutX="75.0" layoutY="13.0" prefHeight="23.0" prefWidth="160.0" />
+                  <DatePicker fx:id="updateDateToTxt" layoutX="75.0" layoutY="13.0" prefHeight="23.0" prefWidth="160.0" />
                   <RadioButton fx:id="btnWM" mnemonicParsing="false" text="西医">
                      <toggleGroup>
                         <ToggleGroup fx:id="type" />
@@ -104,18 +104,4 @@
          </children>
       </VBox>
    </center>
-   <bottom>
-      <BorderPane BorderPane.alignment="CENTER">
-         <right>
-            <Button mnemonicParsing="false" text="折叠" BorderPane.alignment="CENTER">
-               <BorderPane.margin>
-                  <Insets right="5.0" />
-               </BorderPane.margin>
-            </Button>
-         </right>
-         <BorderPane.margin>
-            <Insets top="-5.0" />
-         </BorderPane.margin>
-      </BorderPane>
-   </bottom>
 </BorderPane>

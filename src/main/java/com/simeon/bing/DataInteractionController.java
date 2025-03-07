@@ -2,9 +2,6 @@ package com.simeon.bing;
 
 import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.request.GetRecordsReq;
-import com.simeon.bing.response.GetRecordsRes;
-import com.simeon.bing.utils.HttpUtil;
-import com.simeon.bing.utils.JsonUtil;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -12,15 +9,17 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +34,9 @@ public class DataInteractionController {
     private Stage stage;
     private GetRecordsReq queryParam = GetRecordsReq.builder().pageNum(1).pageSize(30).build();
     private TablePageController tablePageController;
-
+    private BorderPane formPane;
+    @FXML
+    protected Button btnCollapse;
     @FXML
     protected BorderPane searchPane;
     @FXML
@@ -65,7 +66,9 @@ public class DataInteractionController {
     @FXML
     protected TableColumn<PatientRecord, Integer> dischargeMethodCol;
     @FXML
-    protected TableColumn<PatientRecord, Integer> typeCol;
+    protected TableColumn<PatientRecord, String> typeCol;
+    @FXML
+    protected TableColumn<PatientRecord, String> statusCol;
     @FXML
     protected TableColumn<PatientRecord, String> createByCol;
     @FXML
@@ -84,7 +87,7 @@ public class DataInteractionController {
         // 设置查询组件
         FXMLLoader pageLoader = new FXMLLoader(MainApplication.class.getResource("table-page-view.fxml"));
         try {
-            BorderPane pane = searchLoader.load();
+            formPane = searchLoader.load();
             DataInteractionSearchController controller = searchLoader.getController();
 
             BorderPane pagePane = pageLoader.load();
@@ -100,9 +103,9 @@ public class DataInteractionController {
                 return null;
             });
             // 设置 pane 占满整个区域
-            pane.setMaxWidth(Double.MAX_VALUE);
-            pane.setMaxHeight(Double.MAX_VALUE);
-            searchPane.setCenter(pane);
+            formPane.setMaxWidth(Double.MAX_VALUE);
+            formPane.setMaxHeight(Double.MAX_VALUE);
+            searchPane.setCenter(formPane);
 
             tablePageController.setQueryParam(queryParam);
             tablePageController.setSearchCallBack(callbackParam -> {
@@ -118,6 +121,16 @@ public class DataInteractionController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        FontIcon icon = new FontIcon("mdal-expand_less");
+        icon.setIconSize(14);
+        btnCollapse.setGraphic(icon);
+        // 设置按钮的样式，使其变为圆形
+        btnCollapse.setShape(new Circle(10)); // 10 是圆的半径
+        btnCollapse.setMinSize(20, 20); // 设置按钮的最小大小
+        btnCollapse.setMaxSize(20, 20); // 设置按钮的最大大小
+        btnCollapse.setStyle("-fx-background-radius: 10;"); // 设置背景圆角半径为 10
+
 
         // 初始化表格列
         DateFormat format = new SimpleDateFormat(DATE_FORMAT);
@@ -184,9 +197,12 @@ public class DataInteractionController {
             return new SimpleIntegerProperty(dischargeMethod != null ? dischargeMethod : 0).asObject();
         });
         typeCol.setCellValueFactory(param -> {
-            Integer type = param.getValue().getType();
-            // 如果 hospitalizationCount 为 null，使用 0 作为默认值
-            return new SimpleIntegerProperty(type != null ? type : 0).asObject();
+            String type = (param.getValue().getType() != null) ? param.getValue().getType() == 0?"西医":"中医" : "";
+            return new SimpleObjectProperty<>(type);
+        });
+        statusCol.setCellValueFactory(param -> {
+            String status = (param.getValue().getStatus() != null) ? param.getValue().getStatus() : "";
+            return new SimpleObjectProperty<>(status);
         });
         createByCol.setCellValueFactory(param -> {
             String createBy = (param.getValue().getCreateBy() != null) ? param.getValue().getCreateBy() : "";
@@ -208,7 +224,6 @@ public class DataInteractionController {
             ? dateTimeFormat.format(param.getValue().getUpdateTime())
             : ""
         ));
-
     }
 
     @FXML
@@ -265,6 +280,21 @@ public class DataInteractionController {
             } else {
                 System.out.println("保存到 "+file.getPath());
             }
+        }
+    }
+
+    @FXML
+    protected void handleCollapse() {
+        if(searchPane.getChildren().contains(formPane)) {
+            searchPane.setCenter(null);
+            FontIcon icon = new FontIcon("mdal-expand_more");
+            icon.setIconSize(14);
+            btnCollapse.setGraphic(icon);
+        } else {
+            searchPane.setCenter(formPane);
+            FontIcon icon = new FontIcon("mdal-expand_less");
+            icon.setIconSize(14);
+            btnCollapse.setGraphic(icon);
         }
     }
 }

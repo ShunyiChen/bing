@@ -7,15 +7,16 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.UploadRecordsController">
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="tableView" editable="true" prefHeight="200.0" prefWidth="200.0">
               <columns>
-                  <TableColumn fx:id="rowNumberCol1" prefWidth="75.0" text="选择" />
-                <TableColumn fx:id="rowNumberCol" prefWidth="75.0" text="序号" />
+                  <TableColumn fx:id="selectCol" prefWidth="75.0" sortable="false" style="-fx-alignment: CENTER;" text="选择" />
+                <TableColumn fx:id="rowNumberCol" editable="false" prefWidth="75.0" text="序号" />
                   <TableColumn fx:id="institutionCodeCol" prefWidth="75.0" text="机构代码" />
                   <TableColumn fx:id="institutionNameCol" prefWidth="75.0" text="机构名称" />
                 <TableColumn fx:id="medicalRecordNumberCol" prefWidth="75.0" text="病案号" />
@@ -29,6 +30,10 @@
                   <TableColumn fx:id="dischargeMethodCol" prefWidth="75.0" text="离院方式" />
                   <TableColumn fx:id="typeCol" prefWidth="75.0" text="类型" />
                   <TableColumn fx:id="statusCol" prefWidth="75.0" text="病案状态" />
+                  <TableColumn fx:id="createByCol" prefWidth="75.0" text="创建人" />
+                  <TableColumn fx:id="createTimeCol" prefWidth="75.0" text="创建时间" />
+                  <TableColumn fx:id="updateByCol" prefWidth="75.0" text="最近更新人" />
+                  <TableColumn fx:id="updateTimeCol" prefWidth="75.0" text="更新时间" />
               </columns>
             </TableView>
          </content>
@@ -38,21 +43,36 @@
       <BorderPane fx:id="tableFooter" prefHeight="34.0" prefWidth="600.0" BorderPane.alignment="CENTER" />
    </bottom>
    <top>
-      <BorderPane fx:id="topPane" prefHeight="72.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <BorderPane fx:id="topPane" prefHeight="3.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <bottom>
-            <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="32.0" prefWidth="600.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Button mnemonicParsing="false" text="选择上传">
-                     <FlowPane.margin>
-                        <Insets left="5.0" />
-                     </FlowPane.margin>
-                  </Button>
-                  <Button layoutX="15.0" layoutY="10.0" mnemonicParsing="false" text="全部上传" />
-               </children>
-               <BorderPane.margin>
-                  <Insets />
-               </BorderPane.margin>
-            </FlowPane>
+            <BorderPane prefHeight="24.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+               <bottom>
+                  <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="28.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#handleUploadSelected" text="选择上传">
+                           <FlowPane.margin>
+                              <Insets left="5.0" />
+                           </FlowPane.margin>
+                        </Button>
+                        <Button layoutX="15.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleUploadAll" text="全部上传" />
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </FlowPane>
+               </bottom>
+               <center>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER_LEFT">
+                     <children>
+                        <Button fx:id="btnCollapse" mnemonicParsing="false" onAction="#handleCollapse">
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </center>
+            </BorderPane>
          </bottom></BorderPane>
    </top>
 </BorderPane>
