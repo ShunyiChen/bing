@@ -1,5 +1,7 @@
 package com.simeon.bing.utils;
 
+import com.simeon.bing.Settings;
+
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -148,9 +150,12 @@ public class HttpUtil {
              PrintWriter writer = new PrintWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8), true)) {
 
             for (File file : files) {
+                String path = file.getPath();
+                // 使用 replace 方法删除指定的部分
+                String result = path.replace(Settings.LOCAL_STORAGE_PATH, "");
                 // 添加文件部分
                 writer.append("------WebKitFormBoundary7MA4YWxkTrZu0gW\r\n");
-                writer.append("Content-Disposition: form-data; name=\"").append(fileParamName).append("\"; filename=\"").append(file.getName()).append("\"\r\n");
+                writer.append("Content-Disposition: form-data; name=\"").append(fileParamName).append("\"; filename=\"").append(result).append("\"\r\n");
                 writer.append("Content-Type: ").append(getContentType(file)).append("\r\n\r\n");
                 writer.flush();
 

@@ -6,7 +6,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -44,6 +46,9 @@ public class PatientRecord extends BaseEntity {
     private String status;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    /** 返回待上传材料列表 */
+    private List<BingFiles> list = new ArrayList<>();
 
     public void setSelected(boolean selected) {
         this.selected.set(selected);

@@ -1,37 +1,44 @@
 package com.simeon.bing;
 
+import com.simeon.bing.model.BingFiles;
+import com.simeon.bing.model.CallbackParam;
 import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.request.GetRecordsReq;
+import com.simeon.bing.response.GetAllRecordRes;
+import com.simeon.bing.response.GetRecordsRes;
+import com.simeon.bing.response.Response;
+import com.simeon.bing.response.UploadFileRes;
+import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
+import com.simeon.bing.utils.enums.FileState;
 import com.simeon.bing.utils.enums.PatientRecordState;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Callback;
-
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import lombok.Setter;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Setter
 @Getter
@@ -40,9 +47,14 @@ public class UploadRecordsController {
     private GetRecordsReq queryParam = GetRecordsReq.builder().pageNum(1).pageSize(30).status(PatientRecordState.MODIFIED.getState()).build();
     private TablePageController tablePageController;
     // 全局列表，用于存储所有选中的行的病案号
-    private final HashSet<String> selectedItems = new HashSet<>();
+    private final LinkedHashSet<PatientRecord> selectedItems = new LinkedHashSet<>();
     private BorderPane formPane;
-
+    private Task<Void> uploadTask = null;
+    private UploadProgressController uploadProgressController;
+//    @FXML
+//    protected Button btnSelectUpload;
+//    @FXML
+//    protected Button btnUploadAll;
     @FXML
     protected Button btnCollapse;
     @FXML
@@ -100,6 +112,7 @@ public class UploadRecordsController {
         try {
             formPane = searchLoader.load();
             DataInteractionSearchController controller = searchLoader.getController();
+            controller.setIncludeFiles(true);
             controller.getStatusComboBox().getSelectionModel().select(PatientRecordState.MODIFIED.getState());
 
             controller.setQueryParam(queryParam);
@@ -131,13 +144,14 @@ public class UploadRecordsController {
 
             BorderPane pagePane = pageLoader.load();
             tablePageController = pageLoader.getController();
+            tablePageController.setIncludeFiles(true);
             tablePageController.setQueryParam(queryParam);
             tablePageController.setSearchCallBack(callbackParam -> {
                 queryParam = callbackParam.getQueryParam();
                 tableView.getItems().clear();
                 // 记住选中id
                 callbackParam.getResults().forEach(e -> {
-                    if(selectedItems.contains(e.getMedicalRecordNumber())) {
+                    if(selectedItems.contains(e)) {
                         e.setSelected(true);
                     }
                 });
@@ -172,9 +186,9 @@ public class UploadRecordsController {
             tableView.getItems().forEach(r -> {
                 r.setSelected(selected);
                 if(selected) {
-                    selectedItems.add(r.getMedicalRecordNumber());
+                    selectedItems.add(r);
                 } else {
-                    selectedItems.remove(r.getMedicalRecordNumber());
+                    selectedItems.remove(r);
                 }
             });
         });
@@ -187,9 +201,9 @@ public class UploadRecordsController {
                     checkBox.setOnAction(event -> {
                         PatientRecord r = getTableView().getItems().get(getIndex());
                         if (checkBox.isSelected()) {
-                            selectedItems.add(r.getMedicalRecordNumber());
+                            selectedItems.add(r);
                         } else {
-                            selectedItems.remove(r.getMedicalRecordNumber());
+                            selectedItems.remove(r);
                         }
                     });
                 }
@@ -218,18 +232,18 @@ public class UploadRecordsController {
         // Setting up the cell value factories for the table columns
         institutionCodeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getInstitutionCode() != null
-                ? param.getValue().getInstitutionCode()
-                : ""
+            ? param.getValue().getInstitutionCode()
+            : ""
         ));
         institutionNameCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getInstitutionName() != null
-                ? param.getValue().getInstitutionName()
-                : ""
+            ? param.getValue().getInstitutionName()
+            : ""
         ));
         medicalRecordNumberCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getMedicalRecordNumber() != null
-                ? param.getValue().getMedicalRecordNumber()
-                : ""
+            ? param.getValue().getMedicalRecordNumber()
+            : ""
         ));
         medicalRecordNumberCol.setCellValueFactory(param -> {
             PatientRecord record = param.getValue();
@@ -243,13 +257,13 @@ public class UploadRecordsController {
         });
         admissionDateCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getAdmissionDate() != null
-                ? format.format(param.getValue().getAdmissionDate())
-                : ""
+            ? format.format(param.getValue().getAdmissionDate())
+            : ""
         ));
         dischargeDateCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getDischargeDate() != null
-                ? format.format(param.getValue().getDischargeDate())
-                : ""
+            ? format.format(param.getValue().getDischargeDate())
+            : ""
         ));
         patientNameCol.setCellValueFactory(param -> {
             String patientName = (param.getValue().getPatientName() != null) ? param.getValue().getPatientName() : "";
@@ -260,9 +274,9 @@ public class UploadRecordsController {
             return new SimpleObjectProperty<>(gender);
         });
         birthDateCol.setCellValueFactory(param -> new SimpleStringProperty(
-                param.getValue().getBirthDate() != null
-                        ? format.format(param.getValue().getBirthDate())
-                        : ""
+            param.getValue().getBirthDate() != null
+            ? format.format(param.getValue().getBirthDate())
+            : ""
         ));
         ageCol.setCellValueFactory(param -> {
             Integer age = param.getValue().getAge();
@@ -289,8 +303,8 @@ public class UploadRecordsController {
         createTimeCol.setPrefWidth(160);
         createTimeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getCreateTime() != null
-                    ? dateTimeFormat.format(param.getValue().getCreateTime())
-                    : ""
+            ? dateTimeFormat.format(param.getValue().getCreateTime())
+            : ""
         ));
         updateByCol.setCellValueFactory(param -> {
             String updateBy = (param.getValue().getUpdateBy() != null) ? param.getValue().getUpdateBy() : "";
@@ -299,16 +313,25 @@ public class UploadRecordsController {
         updateTimeCol.setPrefWidth(160);
         updateTimeCol.setCellValueFactory(param -> new SimpleStringProperty(
             param.getValue().getUpdateTime() != null
-                ? dateTimeFormat.format(param.getValue().getUpdateTime())
-                : ""
+            ? dateTimeFormat.format(param.getValue().getUpdateTime())
+            : ""
         ));
     }
 
     @FXML
     protected void handleUploadSelected() {
+        if(queryParam.getStatus() == null || !queryParam.getStatus().equals(PatientRecordState.MODIFIED.getState())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initOwner(stage);
+            alert.setTitle("提示");
+            alert.setHeaderText("仅支持上传\"Modified\"状态的病案");
+            alert.setContentText("");
+            alert.show();
+            return;
+        }
         StringBuffer content = new StringBuffer();
         selectedItems.forEach(e -> {
-            content.append(e+",");
+            content.append(e.getMedicalRecordNumber()+",");
         });
         // 检查 content 是否为空并去掉最后的逗号
         if (!content.isEmpty()) {
@@ -321,16 +344,76 @@ public class UploadRecordsController {
             alert.setContentText("病案号："+content);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
-                alert = new Alert (Alert.AlertType.INFORMATION);
-                alert.initOwner(stage);
-                alert.setTitle("提示");
-                alert.setHeaderText("上传成功");
-                alert.setContentText("");
-                alert.show();
+                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("upload-progress-view.fxml"));
+                try {
+                    loader.load();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Stage primaryStage = new Stage();
+                uploadProgressController = loader.getController();
+                uploadProgressController.setStage(primaryStage);
+                uploadProgressController.setRefreshTable(new Callback<Void, Void>() {
+                    @Override
+                    public Void call(Void unused) {
+                        tablePageController.goToTheHomepage();
+                        return null;
+                    }
+                });
+
+                primaryStage.initOwner(stage);
+                primaryStage.initStyle(StageStyle.UNDECORATED);
+                primaryStage.setMaximized(false);
+                primaryStage.setResizable(false);
+                primaryStage.setIconified(false);
+                primaryStage.setScene(new Scene(loader.getRoot(), 465, 170));
+                primaryStage.setTitle("File Upload");
+                primaryStage.show();
+
+                uploadTask = new Task<>() {
+                    @Override
+                    protected Void call() {
+                    int total = selectedItems.size();
+                    AtomicInteger i = new AtomicInteger();
+                    for (PatientRecord e : selectedItems) {
+                        for (BingFiles f : e.getList()) {
+                            // 检查任务是否被取消
+                            if (isCancelled()) {
+                                break;
+                            }
+                            upload(f, uploadTask);
+                        }
+                        // 检查任务是否被取消
+                        if (isCancelled()) {
+                            break;
+                        }
+                        updateRecordStatus(e);
+                        updateProgress(i.get() + 1, total);
+                        i.getAndIncrement();
+                    }
+                    return null;
+                    }
+                };
+
+                uploadTask.setOnSucceeded(e -> {
+                    uploadProgressController.msgLabel.setText("上传完成!");
+                    uploadProgressController.btnOk.setDisable(false);
+                    selectedItems.clear();
+                });
+
+                uploadTask.setOnCancelled(e -> {
+                    uploadProgressController.msgLabel.setText("文件服务找不到，上传已取消!");
+                    uploadProgressController.btnOk.setDisable(false);
+                });
+
+                uploadProgressController.progressBar.progressProperty().bind(uploadTask.progressProperty());
+                uploadProgressController.msgLabel.setText("Uploading...");
+
+                new Thread(uploadTask).start();
             }
         }
         else {
-            Alert alert = new Alert (Alert.AlertType.INFORMATION);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.initOwner(stage);
             alert.setTitle("提示");
             alert.setHeaderText("请至少选中一个病案");
@@ -339,9 +422,159 @@ public class UploadRecordsController {
         }
     }
 
+    private void upload(BingFiles bingFiles, Task<Void> uploadTask) {
+        File f = new File(Settings.LOCAL_STORAGE_PATH + bingFiles.getFilePath());
+        if(f.exists()) {
+            try {
+                String json = HttpUtil.uploadFiles(APIs.UPLOAD_FILES, "file", new File[]{f}, TokenStore.getToken());
+                UploadFileRes res = JsonUtil.fromJson(json, UploadFileRes.class);
+                if(res.getCode() == 200) {
+                    updateFileStatus(bingFiles);
+                } else {
+                    uploadTask.cancel();
+                }
+            } catch (Exception e) {
+                uploadTask.cancel();
+            }
+        } else {
+            String logs = uploadProgressController.logTextArea.getText();
+            logs = logs + f.getPath()+" 【文件不存在】"+"\n";
+            uploadProgressController.logTextArea.setText(logs);
+        }
+    }
+
+    private void updateFileStatus(BingFiles f) {
+        String jsonInputString = "";
+        try {
+            f.setStatus(FileState.UPLOADED.getState());
+            f.setUpdateBy(UserInfoStore.getUserName());
+            jsonInputString = JsonUtil.toJson(f);
+            HttpUtil.sendPostRequest(APIs.UPDATE_FILE, jsonInputString, TokenStore.getToken());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void updateRecordStatus(PatientRecord record) {
+        // 检查是否存在上传失败的文件
+        List<BingFiles> files = record.getList().stream().filter(e -> !e.getStatus().equals(FileState.UPLOADED.getState())).toList();
+        if(files.isEmpty()) {
+            record.setStatus(PatientRecordState.SUBMITTED.getState());
+            record.setUpdateBy(UserInfoStore.getUserName());
+            try {
+                String jsonInputString = JsonUtil.toJson(record);
+                HttpUtil.sendPostRequest(APIs.UPDATE_RECORDS, jsonInputString, TokenStore.getToken());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     @FXML
     protected void handleUploadAll() {
+        if(queryParam.getStatus() == null || !queryParam.getStatus().equals(PatientRecordState.MODIFIED.getState())) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initOwner(stage);
+            alert.setTitle("提示");
+            alert.setHeaderText("仅支持上传\"Modified\"状态的病案");
+            alert.setContentText("");
+            alert.show();
+            return;
+        }
+        int total = 0;
+        GetAllRecordRes res;
+        String jsonInputString;
+        try {
+            jsonInputString = JsonUtil.toJson(queryParam); // 将对象转换为JSON字符串
+            String response = HttpUtil.sendPostRequest(APIs.GET_ALL_WITH_FILES, jsonInputString, TokenStore.getToken());
+            res = JsonUtil.fromJson(response, GetAllRecordRes.class);
+            total = res.getData().size();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if(total == 0) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.initOwner(stage);
+            alert.setTitle("提示");
+            alert.setHeaderText("暂无待上传的病案");
+            alert.setContentText("");
+            alert.show();
+        } else {
+            Alert alert = new Alert (Alert.AlertType.CONFIRMATION);
+            alert.initOwner(stage);
+            alert.setTitle("提示");
+            alert.setHeaderText("请确认是否要上传选中的病案？");
+            alert.setContentText("病案总数："+total);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("upload-progress-view.fxml"));
+                try {
+                    loader.load();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                Stage primaryStage = new Stage();
+                uploadProgressController = loader.getController();
+                uploadProgressController.setStage(primaryStage);
+                uploadProgressController.setRefreshTable(new Callback<Void, Void>() {
+                    @Override
+                    public Void call(Void unused) {
+                        tablePageController.goToTheHomepage();
+                        return null;
+                    }
+                });
 
+                primaryStage.initOwner(stage);
+                primaryStage.initStyle(StageStyle.UNDECORATED);
+                primaryStage.setMaximized(false);
+                primaryStage.setResizable(false);
+                primaryStage.setIconified(false);
+                primaryStage.setScene(new Scene(loader.getRoot(), 465, 170));
+                primaryStage.setTitle("File Upload");
+                primaryStage.show();
+
+                int finalTotal = total;
+                uploadTask = new Task<>() {
+                    @Override
+                    protected Void call() {
+                    AtomicInteger i = new AtomicInteger();
+                    for (PatientRecord e : res.getData()) {
+                        for (BingFiles f : e.getList()) {
+                            // 检查任务是否被取消
+                            if (isCancelled()) {
+                                break;
+                            }
+                            upload(f, uploadTask);
+                        }
+                        // 检查任务是否被取消
+                        if (isCancelled()) {
+                            break;
+                        }
+                        updateRecordStatus(e);
+                        updateProgress(i.get() + 1, finalTotal);
+                        i.getAndIncrement();
+                    }
+                    return null;
+                    }
+                };
+
+                uploadTask.setOnSucceeded(e -> {
+                    uploadProgressController.msgLabel.setText("上传完成!");
+                    uploadProgressController.btnOk.setDisable(false);
+                    selectedItems.clear();
+                });
+
+                uploadTask.setOnCancelled(e -> {
+                    uploadProgressController.msgLabel.setText("文件服务找不到，上传已取消!");
+                    uploadProgressController.btnOk.setDisable(false);
+                });
+
+                uploadProgressController.progressBar.progressProperty().bind(uploadTask.progressProperty());
+                uploadProgressController.msgLabel.setText("Uploading...");
+
+                new Thread(uploadTask).start();
+            }
+        }
     }
 
     @FXML

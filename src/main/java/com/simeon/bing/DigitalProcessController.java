@@ -5,7 +5,6 @@ import com.simeon.bing.model.BingFiles;
 import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.model.SysDictData;
 import com.simeon.bing.model.SysDictType;
-import com.simeon.bing.request.BatchAddReq;
 import com.simeon.bing.response.*;
 import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
@@ -16,9 +15,6 @@ import com.teamdev.jxbrowser.browser.Browser;
 import com.teamdev.jxbrowser.engine.Engine;
 import com.teamdev.jxbrowser.engine.EngineOptions;
 import com.teamdev.jxbrowser.frame.Frame;
-import com.teamdev.jxbrowser.js.JsObject;
-import com.teamdev.jxbrowser.js.internal.JsMapImpl;
-import com.teamdev.jxbrowser.js.internal.JsObjectImpl;
 import com.teamdev.jxbrowser.view.javafx.BrowserView;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -32,14 +28,22 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.codec.Encoder;
-import org.apache.commons.text.StringEscapeUtils;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -99,8 +103,27 @@ public class DigitalProcessController {
                 TreeItem<SysDictData> selected = caseClassificationTree.getSelectionModel().getSelectedItem();
                 if (selected != null) {
                     if(selected.getValue().isFile()) {
-                        File f = new File(selected.getValue().getFilePath());
-                        Image image = new Image(f.toURI().toString());
+                        Image image = null;
+                        long fileSize = 0L;
+//                        System.out.println(selected.getValue().getFileStatus());
+//                        System.out.println(selected.getValue().getDictType());
+//                        System.out.println(selected.getValue().getFilePath());
+//                        System.out.println(selected.getValue().getFileId());
+
+                        if(selected.getValue().getFileStatus().equals(FileState.WAITING_UPLOAD.getState())) {
+                            File f = new File(selected.getValue().getFilePath());
+                            image = new Image(f.toURI().toString());
+                            fileSize = f.length();
+                        } else {
+                            //http://127.0.0.1:9300/statics/\MRN001\1.住院病案\1.住院病案首页\第1页.jpg
+                            try {
+                                String encodedUrl = new URI(selected.getValue().getFilePath().replace("\\", "/")).toASCIIString();
+                                image = new Image(encodedUrl);
+                                fileSize = getRemoteFileSize(encodedUrl);
+                            } catch (URISyntaxException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         bigImageView.setImage(image);
 
                         // 获取图片的宽度和高度
@@ -108,8 +131,6 @@ public class DigitalProcessController {
                         int height = (int) image.getHeight();
 
                         labelPX.setText("图片分辨率: " + width + "x" + height);
-
-                        long fileSize = f.length();
 
                         // 转换为 KB 或 MB
                         if (fileSize < 1024) {
@@ -161,6 +182,28 @@ public class DigitalProcessController {
         FontIcon cropFreeIcon = new FontIcon("mdal-crop_free");
         cropFreeIcon.setIconSize(14);
         btnZoomInOut.setGraphic(cropFreeIcon);
+    }
+
+    private long getRemoteFileSize(String filePath) {
+        Path tempFile;
+        try {
+            tempFile = Files.createTempFile("image", ".jpg");
+            // 下载图像到临时文件
+            try (InputStream in = new URL(filePath).openStream();
+                 FileOutputStream out = new FileOutputStream(tempFile.toFile())) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+            // 获取文件大小
+            long fileSize = Files.size(tempFile);
+            Files.delete(tempFile);
+            return fileSize;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void handleMousePressed(MouseEvent event) {
@@ -311,6 +354,7 @@ public class DigitalProcessController {
                         } else {
                             page.setFilePath(Settings.LOCAL_STORAGE_PATH + f.getFilePath());
                         }
+                        page.setFileStatus(f.getStatus());
                         page.setDictLabel(f.getFileName());
                         t.setValue(page);
                         item.getChildren().add(t);
@@ -431,7 +475,10 @@ public class DigitalProcessController {
                         updateNewFile(finalItem.getValue().getFileId());
                         updatePatientRecord(res.getData());
 
-                        execute(finalItem.getValue().getFilePath(), frame);
+                        String filePath = dir.getPath() + File.separator + finalItem.getValue().getDictLabel()+".jpg";
+                        finalItem.getValue().setFilePath(filePath);
+
+                        execute(filePath, frame);
                     });
                 }
             }
@@ -462,6 +509,7 @@ public class DigitalProcessController {
                     newTreeNode.setDictLabel(fileName);
                     newTreeNode.setFilePath(filePath);
                     newTreeNode.setFile(true);
+                    newTreeNode.setFileStatus(FileState.WAITING_UPLOAD.getState());
 
                     subItem.setValue(newTreeNode);
                     finalItem.getChildren().add(subItem);
@@ -598,7 +646,7 @@ public class DigitalProcessController {
                         bigImageView.setImage(image);
                         scheduler.shutdown();
                     }
-                    System.out.println("执行任务: " + (count + 1));
+//                    System.out.println("执行任务: " + (count + 1));
                     count++;
                 } else {
                     scheduler.shutdown(); // 任务完成后关闭调度器

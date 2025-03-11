@@ -49,12 +49,12 @@
                <bottom>
                   <FlowPane alignment="CENTER_LEFT" hgap="5.0" prefHeight="28.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleUploadSelected" text="选择上传">
+                        <Button fx:id="btnSelectUpload" mnemonicParsing="false" onAction="#handleUploadSelected" text="选择上传">
                            <FlowPane.margin>
                               <Insets left="5.0" />
                            </FlowPane.margin>
                         </Button>
-                        <Button layoutX="15.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleUploadAll" text="全部上传" />
+                        <Button fx:id="btnUploadAll" layoutX="15.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleUploadAll" text="全部上传" />
                      </children>
                      <BorderPane.margin>
                         <Insets />

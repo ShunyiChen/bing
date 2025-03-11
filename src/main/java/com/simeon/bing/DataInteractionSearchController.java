@@ -29,6 +29,8 @@ import static javafx.scene.control.PopupControl.USE_COMPUTED_SIZE;
 public class DataInteractionSearchController {
     private Callback<CallbackParam, Void> searchCallBack;
     private GetRecordsReq queryParam;
+    private boolean includeFiles;
+
     @FXML
     protected TextField institutionCodeTxt;
     @FXML
@@ -156,7 +158,8 @@ public class DataInteractionSearchController {
         String jsonInputString;
         try {
             jsonInputString = JsonUtil.toJson(queryParam); // 将对象转换为JSON字符串
-            String response = HttpUtil.sendPostRequest(APIs.GET_RECORDS, jsonInputString, TokenStore.getToken());
+            String api = includeFiles? APIs.GET_RECORDS_WITH_FILES : APIs.GET_RECORDS;
+            String response = HttpUtil.sendPostRequest(api, jsonInputString, TokenStore.getToken());
             GetRecordsRes res = JsonUtil.fromJson(response, GetRecordsRes.class);
             CallbackParam param = new CallbackParam(queryParam, res.getRows(), res.getTotal());
             searchCallBack.call(param);

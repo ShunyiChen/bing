@@ -1,7 +1,6 @@
 package com.simeon.bing;
 
 import com.simeon.bing.model.CallbackParam;
-import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.model.TablePage;
 import com.simeon.bing.request.GetRecordsReq;
 import com.simeon.bing.response.GetRecordsRes;
@@ -27,6 +26,8 @@ public class TablePageController {
     private Callback<CallbackParam, Void> searchCallBack;
     private GetRecordsReq queryParam;
     private long totalPages;
+    private boolean includeFiles;
+
     @FXML
     private Label totalCountLabel;
     @FXML
@@ -82,7 +83,8 @@ public class TablePageController {
         String jsonInputString;
         try {
             jsonInputString = JsonUtil.toJson(queryParam);// 将对象转换为JSON字符串
-            String response = HttpUtil.sendPostRequest(APIs.GET_RECORDS, jsonInputString, TokenStore.getToken());
+            String api = includeFiles? APIs.GET_RECORDS_WITH_FILES : APIs.GET_RECORDS;
+            String response = HttpUtil.sendPostRequest(api, jsonInputString, TokenStore.getToken());
             GetRecordsRes res = JsonUtil.fromJson(response, GetRecordsRes.class);
             totalCountLabel.setText("共"+res.getTotal()+"条");
             totalPages = (res.getTotal() + queryParam.getPageSize() - 1) / queryParam.getPageSize();
