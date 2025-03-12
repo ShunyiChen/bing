@@ -4,7 +4,6 @@ import com.simeon.bing.MainApplication;
 import com.simeon.bing.ProgressController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -13,28 +12,30 @@ import javafx.util.Callback;
 import java.io.IOException;
 
 public class UIUtils {
-    private  Stage progressStage = new Stage(StageStyle.UNDECORATED);
+    private final Stage primaryStage = new Stage();
+    private ProgressController controller;
 
-    public UIUtils(Callback<String, String> callback, String info) {
+    public UIUtils(Stage stage, Callback<String, String> callback) {
+        primaryStage.initOwner(stage);
+        primaryStage.initStyle(StageStyle.UNDECORATED);
+        primaryStage.initModality(Modality.APPLICATION_MODAL);
+        primaryStage.setMaximized(false);
+        primaryStage.setResizable(false);
+        primaryStage.setIconified(false);
         FXMLLoader loader = new FXMLLoader(MainApplication.class.getResource("progress-view.fxml"));
-        BorderPane root;
         try {
-            root = loader.load();
-            ProgressController controller = loader.getController();
-            controller.setStage(progressStage);
-            controller.setCallback(callback);
-            controller.getLabelInfo().setText(info);
-            Scene scene = new Scene(root);
-            progressStage.setScene(scene);
-            progressStage.initModality(Modality.APPLICATION_MODAL);
-            progressStage.setResizable(false);
+            loader.load();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        primaryStage.setScene(new Scene(loader.getRoot()));
+        controller = loader.getController();
+        controller.setStage(primaryStage);
+        controller.setCallback(callback);
     }
 
-    public void loading() {
-        RefUtils.labelState.setText("开始执行");
-        progressStage.show();
+    public void show() {
+        primaryStage.show();
+        controller.start();
     }
 }

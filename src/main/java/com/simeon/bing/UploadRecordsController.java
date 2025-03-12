@@ -1,12 +1,9 @@
 package com.simeon.bing;
 
 import com.simeon.bing.model.BingFiles;
-import com.simeon.bing.model.CallbackParam;
 import com.simeon.bing.model.PatientRecord;
 import com.simeon.bing.request.GetRecordsReq;
 import com.simeon.bing.response.GetAllRecordRes;
-import com.simeon.bing.response.GetRecordsRes;
-import com.simeon.bing.response.Response;
 import com.simeon.bing.response.UploadFileRes;
 import com.simeon.bing.utils.HttpUtil;
 import com.simeon.bing.utils.JsonUtil;
@@ -24,6 +21,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
@@ -363,6 +361,7 @@ public class UploadRecordsController {
 
                 primaryStage.initOwner(stage);
                 primaryStage.initStyle(StageStyle.UNDECORATED);
+                primaryStage.initModality(Modality.APPLICATION_MODAL);
                 primaryStage.setMaximized(false);
                 primaryStage.setResizable(false);
                 primaryStage.setIconified(false);

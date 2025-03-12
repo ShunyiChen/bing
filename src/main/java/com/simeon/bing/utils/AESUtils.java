@@ -29,7 +29,9 @@ public class AESUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(complexAESEncrypt("admin"));
-//        System.out.println(complexAESEncrypt("Admin123"));
+        String userName = "scanmanager";
+        String expiration = "2025-03-14";
+        String licenseInfo = userName + "|" + expiration;
+        System.out.println(complexAESEncrypt(licenseInfo));
     }
 }

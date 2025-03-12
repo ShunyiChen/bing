@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="841.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="841.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.MainController">
     <bottom>
         <BorderPane prefHeight="23.0" prefWidth="841.0" style="-fx-background-color: rgb(221,221,221);" BorderPane.alignment="CENTER">
          <left>
@@ -25,18 +25,24 @@
          </left></BorderPane>
     </bottom>
    <top>
-      <BorderPane prefHeight="48.0" prefWidth="841.0" BorderPane.alignment="CENTER">
+      <BorderPane fx:id="headerPane" prefHeight="48.0" prefWidth="841.0" BorderPane.alignment="CENTER">
          <center>
             <BorderPane prefHeight="77.0" prefWidth="841.0" BorderPane.alignment="CENTER">
                <left>
-                  <Label text="病案数字化上传系统（高拍）V2.0" BorderPane.alignment="CENTER">
-                     <font>
-                        <Font size="21.0" />
-                     </font>
-                     <BorderPane.margin>
-                        <Insets left="5.0" />
-                     </BorderPane.margin>
-                  </Label>
+                  <HBox alignment="CENTER_LEFT" spacing="10.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label fx:id="labelLogo">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label text="病案数字化上传系统（高拍）v2.0" textFill="#f8f1f1">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
                </left>
             </BorderPane>
          </center>
@@ -45,14 +51,17 @@
    <center>
       <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
          <children>
-            <BorderPane fx:id="mainContainer" prefHeight="200.0" prefWidth="200.0" />
+            <BorderPane fx:id="mainContainer" prefHeight="200.0" prefWidth="200.0">
+               <center>
+                  <Label text="欢迎使用本软件！请点击左侧菜单开始操作。" wrapText="true" BorderPane.alignment="CENTER" />
+               </center></BorderPane>
             <BorderPane fx:id="topLayerPane" prefHeight="515.0" prefWidth="795.0" style="-fx-background-color: transparent;">
                <left>
                      <BorderPane fx:id="sideBar" minWidth="0.0" prefHeight="515.0" prefWidth="152.0" BorderPane.alignment="CENTER">
                         <center>
-                           <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="0.0" prefHeight="488.0" prefWidth="588.0" BorderPane.alignment="CENTER">
+                           <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="0.0" prefHeight="488.0" prefWidth="588.0" style="-fx-background-color: lightblue;" BorderPane.alignment="CENTER">
                               <content>
-                                 <TreeView fx:id="routerTree" minWidth="0.0" prefHeight="486.0" prefWidth="563.0" style="-fx-background-color: blue;" />
+                                 <TreeView fx:id="routerTree" minWidth="0.0" prefHeight="486.0" prefWidth="563.0" />
                               </content>
                            </ScrollPane>
                         </center>
@@ -61,8 +70,8 @@
                               <center>
                                  <HBox alignment="CENTER_RIGHT" spacing="5.0" style="-fx-background-color: lightgrey; -fx-border-color: grey;" BorderPane.alignment="CENTER_LEFT">
                                     <children>
-                                       <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="23.0" />
-                                       <Button mnemonicParsing="false" prefHeight="23.0" prefWidth="23.0" />
+                                       <Button fx:id="btnExpand" mnemonicParsing="false" onAction="#handleExpand" prefHeight="23.0" prefWidth="23.0" />
+                                       <Button fx:id="btnCollapse" mnemonicParsing="false" onAction="#handleCollapse" prefHeight="23.0" prefWidth="23.0" />
                                     </children>
                                     <padding>
                                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
@@ -78,7 +87,7 @@
       </StackPane>
    </center>
    <left>
-      <BorderPane fx:id="borderBar" prefHeight="513.0" prefWidth="28.0" style="-fx-background-color: rgb(0,150,201);" BorderPane.alignment="CENTER">
+      <BorderPane fx:id="borderBar" prefHeight="513.0" prefWidth="28.0" style="-fx-background-color: rgb(3,54,67);" BorderPane.alignment="CENTER">
          <top>
             <VBox alignment="TOP_CENTER" prefHeight="55.0" prefWidth="28.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>

@@ -202,6 +202,12 @@ public class DigitalProcessController {
             Files.delete(tempFile);
             return fileSize;
         } catch (IOException e) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.initOwner(stage);
+            alert.setTitle("提示");
+            alert.setHeaderText("无法访问文件服务");
+            alert.setContentText("");
+            alert.show();
             throw new RuntimeException(e);
         }
     }
@@ -443,7 +449,7 @@ public class DigitalProcessController {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("提示");
             alert.initOwner(stage);
-            alert.setHeaderText("您确定要覆盖原有文件吗？");
+            alert.setHeaderText("请确认是否要覆盖文件["+item.getValue().getDictLabel()+"]？");
             alert.setContentText("");
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -453,10 +459,6 @@ public class DigitalProcessController {
                     TreeItem<SysDictData> finalItem = item;
                     // 清空原有材料文件
                     bigImageView.setImage(null);
-                    File f = new File(finalItem.getValue().getFilePath());
-                    if(f.exists()) {
-                        f.delete();
-                    }
                     jxbrowser.mainFrame().ifPresent(frame -> {
                         // 材料分类名称
                         String classificationName = finalItem.getParent().getValue().getDictLabel();
@@ -478,6 +480,10 @@ public class DigitalProcessController {
                         String filePath = dir.getPath() + File.separator + finalItem.getValue().getDictLabel()+".jpg";
                         finalItem.getValue().setFilePath(filePath);
 
+                        File f = new File(filePath);
+                        if(f.exists()) {
+                            f.delete();
+                        }
                         execute(filePath, frame);
                     });
                 }

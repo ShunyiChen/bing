@@ -1,9 +1,6 @@
 package com.simeon.bing;
 
-import com.simeon.bing.request.Login;
-import com.simeon.bing.response.LoginResponse;
 import com.simeon.bing.utils.HttpUtil;
-import com.simeon.bing.utils.JsonUtil;
 import javafx.application.Application;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
@@ -14,7 +11,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -81,8 +77,7 @@ public class MainApplication extends Application {
         LoginController loginController = loginLoader.getController();
         loginController.initialize(this);
         stage.setOnCloseRequest(e -> System.exit(0));
-        // enable style
-//        stage.setTitle(Constants.SYS_NAME);
+        stage.setTitle("Bing Application");
         stage.setScene(scene);
         stage.show();
     }
@@ -106,7 +101,6 @@ public class MainApplication extends Application {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMaximized(true);
-        stage.setTitle("Bing");
 
         // 监听关闭事件
         stage.setOnCloseRequest(event -> {

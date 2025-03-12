@@ -10,14 +10,22 @@ import com.simeon.bing.utils.YamlUtils;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class LoginController {
     private MainApplication app;
+    @FXML
+    protected HBox headerPane;
     @FXML
     private CheckBox remember;
     @FXML
@@ -30,23 +38,11 @@ public class LoginController {
     private Label userNameLabel;
     @FXML
     private Label passLabel;
-    @FXML
-    private Label sysTitle;
-    @FXML
-    private Label versionLabel;
 
     @FXML
     private void initialize() {
-        versionLabel.setText("1.0.0");
-
-//        FontIcon titleIcon = new FontIcon("mdal-cloud_upload");
-//        titleIcon.setIconSize(30);
-//        titleIcon.setFill(Color.BLUE);
-//        sysTitle.setGraphic(titleIcon);
-
         FontIcon userIcon = new FontIcon("mdal-account_box");
         userIcon.setIconSize(16);
-//        userIcon.setFill(Constants.primaryColor);
         userNameLabel.setGraphic(userIcon);
 
         FontIcon passIcon = new FontIcon("mdmz-vpn_key");
@@ -54,7 +50,32 @@ public class LoginController {
 //        passIcon.setFill(Constants.primaryColor);
         passLabel.setGraphic(passIcon);
 
+
+        String yamlPath = System.getProperty("user.home") + "/" + "bing.yaml";
+        try {
+            Map<String, String> parameters = YamlUtils.loadFromYaml(yamlPath, HashMap.class);
+            userName.setText(parameters.get(Settings.REMEMBER_USERNAME_KEY));
+            if(!userName.getText().equals("")) {
+                remember.setSelected(true);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         Platform.runLater(() -> {
+            Image image  = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/bg.jpg")));
+            // 设置背景图像
+            // 创建背景图片
+            BackgroundImage backgroundImage = new BackgroundImage(
+                image ,
+                BackgroundRepeat.NO_REPEAT, // 不重复
+                BackgroundRepeat.NO_REPEAT, // 不重复
+                BackgroundPosition.CENTER,  // 居中
+                new BackgroundSize(2000, 190, true, true, true, true) // 背景大小
+            );
+            // 设置背景
+            headerPane.setBackground(new Background(backgroundImage));
+
             signIn.requestFocus();
         });
     }
@@ -64,6 +85,7 @@ public class LoginController {
         if(userName.getText().trim().equals("") || password.getText().trim().equals("")) {
             Alert alert = new Alert (Alert.AlertType.INFORMATION);
             alert.setTitle("提示");
+            alert.initOwner(app.stage);
             alert.setHeaderText("用户名或密码不能为空");
             alert.setContentText("");
             alert.show();
@@ -78,6 +100,7 @@ public class LoginController {
                 if(res.getData() == null) {
                     Alert alert = new Alert (Alert.AlertType.INFORMATION);
                     alert.setTitle("提示");
+                    alert.initOwner(app.stage);
                     alert.setHeaderText("用户名或密码输入不正确");
                     alert.setContentText("");
                     alert.show();
@@ -90,7 +113,17 @@ public class LoginController {
                 GetUserInfoRes resp = JsonUtil.fromJson(response, GetUserInfoRes.class);
                 // 保存用户信息
                 UserInfoStore.setUserName(resp.getUser().getUserName());
-
+                // 检查License是否有效
+                if(!checkLicense(resp.getUser().getUserName())) {
+                    Alert alert = new Alert (Alert.AlertType.INFORMATION);
+                    alert.setTitle("提示");
+                    alert.initOwner(app.stage);
+                    alert.setHeaderText("登录错误");
+                    alert.setContentText("");
+                    alert.show();
+                    return;
+                }
+                // 加载本地yaml配置
                 loadLocalSettings();
 
                 app.unregisterEnterKey(app.stage.getScene());
@@ -100,6 +133,32 @@ public class LoginController {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 通过用户名检查License是否有效
+     *
+     * @param userName
+     * @return
+     */
+    private boolean checkLicense(String userName) {
+        String licenseInfo = LicenseStore.getEncryptedLicenseInfo(userName);
+        if(!licenseInfo.isEmpty()) {
+            licenseInfo = AESUtils.complexAESDecrypt(licenseInfo);
+            String expiration = licenseInfo.substring(licenseInfo.indexOf("|") + 1);
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                Date expirationDate = f.parse(expiration);
+                if(new Date().compareTo(expirationDate) > 0) {
+                    return false;
+                }
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -118,6 +177,13 @@ public class LoginController {
             Settings.LOCAL_STORAGE_PATH = parameters.get(Settings.LOCAL_STORAGE_PATH_KEY);
             Settings.REMOTE_STORAGE_PATH = parameters.get(Settings.REMOTE_STORAGE_PATH_KEY);
             Settings.CAPTURE_PLUGIN = parameters.get(Settings.CAPTURE_PLUGIN_KEY);
+
+            if(remember.isSelected()) {
+                parameters.put(Settings.REMEMBER_USERNAME_KEY, userName.getText());
+            } else {
+                parameters.put(Settings.REMEMBER_USERNAME_KEY, "");
+            }
+            YamlUtils.saveToYaml(parameters, yamlPath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -125,18 +191,5 @@ public class LoginController {
 
     public void initialize(MainApplication app) {
         this.app = app;
-//        //设置记住用户名选中
-//        if(Constants.YAML_CONF.exists()) {
-//            try {
-//                Map<String, Object> conf = YamlUtil.read(Constants.YAML_CONF);
-//                remember.setSelected((Boolean) conf.get("remember"));
-//                if((Boolean)conf.get("remember")) {
-//                    userName.setText((String) conf.get("userName"));
-//                    password.setText((String) conf.get("password"));
-//                }
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
     }
 }

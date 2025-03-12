@@ -12,18 +12,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="394.0" prefWidth="547.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.LoginController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="394.0" prefWidth="547.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.simeon.bing.LoginController">
    <center>
       <VBox prefHeight="336.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER" prefHeight="92.0" prefWidth="600.0">
+            <HBox fx:id="headerPane" alignment="CENTER" prefHeight="191.0" prefWidth="547.0">
                <children>
-                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="病案数字化上传系统（高拍）">
+                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="病案数字化上传系统（高拍）" textFill="#f5f2f2">
                      <font>
-                        <Font size="25.0" />
+                        <Font size="27.0" />
                      </font>
                   </Label>
-                  <Label fx:id="versionLabel" alignment="BOTTOM_LEFT" prefHeight="30.0" text="v1.0.0">
+                  <Label fx:id="versionLabel" alignment="BOTTOM_LEFT" prefHeight="30.0" text="v2.0" textFill="#fcfafa">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>
@@ -40,7 +40,7 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <TextField fx:id="userName" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="scanmanager" />
+                  <TextField fx:id="userName" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="" />
                </children>
                <VBox.margin>
                   <Insets top="30.0" />
@@ -56,7 +56,7 @@
                         <Insets right="5.0" />
                      </HBox.margin>
                   </Label>
-                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="scanmanager" />
+                  <PasswordField fx:id="password" prefHeight="28.0" prefWidth="200.0" style="-fx-padding: 0;" text="" />
                </children>
                <VBox.margin>
                   <Insets top="5.0" />
@@ -65,12 +65,9 @@
                   <Insets left="-55.0" />
                </padding>
             </HBox>
-            <HBox alignment="CENTER" layoutX="10.0" layoutY="48.0" prefHeight="40.0" prefWidth="600.0">
-               <padding>
-                  <Insets top="45.0" />
-               </padding>
+            <HBox alignment="CENTER" layoutX="10.0" layoutY="48.0" prefHeight="45.0" prefWidth="547.0">
                <children>
-                  <CheckBox fx:id="remember" mnemonicParsing="false" prefHeight="18.0" prefWidth="250.0" text="记住用户名" />
+                  <CheckBox fx:id="remember" mnemonicParsing="false" prefHeight="18.0" text="记住用户名" />
                </children>
             </HBox>
             <HBox alignment="CENTER" layoutX="10.0" layoutY="95.0" prefHeight="53.0" prefWidth="600.0">
