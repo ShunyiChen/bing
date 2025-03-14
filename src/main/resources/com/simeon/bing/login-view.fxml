@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Reflection?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -18,10 +17,13 @@
          <children>
             <HBox fx:id="headerPane" alignment="CENTER" prefHeight="191.0" prefWidth="547.0">
                <children>
-                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="病案数字化上传系统（高拍）" textFill="#f5f2f2">
+                  <Label fx:id="sysTitle" alignment="CENTER_RIGHT" text="张涛病案数字化上传系统（高拍）" textFill="#f5f2f2">
                      <font>
-                        <Font size="27.0" />
+                        <Font size="20.0" />
                      </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
                   </Label>
                   <Label fx:id="versionLabel" alignment="BOTTOM_LEFT" prefHeight="30.0" text="v2.0" textFill="#fcfafa">
                      <HBox.margin>
@@ -29,9 +31,6 @@
                      </HBox.margin>
                   </Label>
                </children>
-               <effect>
-                  <Reflection fraction="0.39" />
-               </effect>
             </HBox>
             <HBox alignment="CENTER">
                <children>

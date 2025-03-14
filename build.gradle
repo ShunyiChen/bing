@@ -68,8 +68,8 @@ dependencies {
 //    implementation 'org.apache.commons:commons-lang3:3.13.0'
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.3'
 
-    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
-    implementation 'com.mysql:mysql-connector-j:8.3.0'
+//    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+//    implementation 'com.mysql:mysql-connector-j:8.3.0'
     implementation 'org.yaml:snakeyaml:2.2'
     implementation 'commons-net:commons-net:3.10.0'
     implementation 'com.opencsv:opencsv:5.9'
@@ -81,9 +81,9 @@ dependencies {
     implementation 'org.apache.logging.log4j:log4j-core:2.23.1'
     implementation 'org.apache.logging.log4j:log4j-jpl:2.23.1'
 
-    implementation "org.hibernate:hibernate-entitymanager:$hibernateEntityManagerVersion"
-    implementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
-    implementation "org.hibernate:hibernate-core:$hibernateEntityManagerVersion"
+//    implementation "org.hibernate:hibernate-entitymanager:$hibernateEntityManagerVersion"
+//    implementation "org.hibernate:hibernate-validator:$hibernateValidatorVersion"
+//    implementation "org.hibernate:hibernate-core:$hibernateEntityManagerVersion"
 
 //    implementation 'com.teamdev.jxbrowser:jxbrowser-cross-platform:7.12.2'
 //    implementation 'com.teamdev.jxbrowser:jxbrowser-win32:7.12.2'
